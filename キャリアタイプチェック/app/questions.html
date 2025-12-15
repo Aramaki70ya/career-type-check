@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>質問 | キャリアタイプ12診断</title>
+  <title>Questions | キャリアタイプ12診断</title>
   <meta name="description" content="36問の質問に答えて、あなたのキャリアタイプを診断しましょう。">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -12,8 +12,8 @@
     <!-- Header -->
     <header class="page-header">
       <div class="container">
-        <h1>キャリアタイプ診断</h1>
-        <p>あなたに当てはまるものを選んでください</p>
+        <h1>Career Type Assessment</h1>
+        <p>Choose the option that best describes you</p>
       </div>
     </header>
 
@@ -23,8 +23,8 @@
         <!-- Progress -->
         <div class="progress-container">
           <div class="progress-info">
-            <span id="progressText">1 / 36</span>
-            <span id="progressPercent">0%</span>
+            <span id="progressText">01 / 36</span>
+            <span id="progressPercent">0% Complete</span>
           </div>
           <div class="progress-bar">
             <div class="progress-fill" id="progressFill" style="width: 0%"></div>
@@ -33,12 +33,12 @@
 
         <!-- Warning Message -->
         <div class="warning-message" id="warningMessage">
-          回答を選択してください
+          Please select an answer to continue
         </div>
 
         <!-- Question Card -->
         <div class="question-card fade-in" id="questionCard">
-          <span class="question-number" id="questionNumber">Q1</span>
+          <span class="question-number" id="questionNumber">Question 01</span>
           <p class="question-text" id="questionText">質問文がここに表示されます</p>
           
           <div class="choices" id="choicesContainer">
@@ -49,10 +49,10 @@
         <!-- Navigation -->
         <div class="question-nav">
           <button type="button" class="btn btn-secondary" id="prevBtn">
-            ← 前へ
+            ← Previous
           </button>
           <button type="button" class="btn btn-primary" id="nextBtn">
-            次へ →
+            Next →
           </button>
         </div>
       </div>
@@ -61,7 +61,7 @@
     <!-- Footer -->
     <footer class="page-footer">
       <div class="container">
-        <a href="index.html" class="btn btn-sm btn-outline" id="exitBtn">診断を中断する</a>
+        <a href="index.html" class="btn btn-sm btn-outline" id="exitBtn">Exit Assessment</a>
       </div>
     </footer>
   </div>
@@ -114,7 +114,8 @@
       if (!question) return;
 
       // Update question display
-      questionNumber.textContent = `Q${currentIndex + 1}`;
+      const qNum = String(currentIndex + 1).padStart(2, '0');
+      questionNumber.textContent = `Question ${qNum}`;
       questionText.textContent = question.text;
 
       // Render choices
@@ -170,8 +171,9 @@
       const total = QUESTIONS.length;
       const percent = Math.round((answeredCount / total) * 100);
       
-      progressText.textContent = `${currentIndex + 1} / ${total}`;
-      progressPercent.textContent = `${percent}%`;
+      const qNum = String(currentIndex + 1).padStart(2, '0');
+      progressText.textContent = `${qNum} / ${total}`;
+      progressPercent.textContent = `${percent}% Complete`;
       progressFill.style.width = `${percent}%`;
     }
 
@@ -182,7 +184,7 @@
       
       // Next/Submit button
       const isLastQuestion = currentIndex === QUESTIONS.length - 1;
-      nextBtn.textContent = isLastQuestion ? '結果を見る' : '次へ →';
+      nextBtn.textContent = isLastQuestion ? 'View Results' : 'Next →';
     }
 
     // Go to previous question

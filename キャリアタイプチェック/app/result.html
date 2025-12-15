@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>診断結果 | キャリアタイプ12診断</title>
+  <title>Results | キャリアタイプ12診断</title>
   <meta name="description" content="あなたのキャリアタイプ診断結果です。">
   <link rel="stylesheet" href="styles.css">
   <!-- Chart.js CDN -->
@@ -14,8 +14,8 @@
     <!-- Header -->
     <header class="page-header">
       <div class="container">
-        <h1>診断結果</h1>
-        <p>あなたのキャリアタイプが判明しました</p>
+        <h1>Assessment Results</h1>
+        <p>Your Career Type Has Been Identified</p>
       </div>
     </header>
 
@@ -24,12 +24,12 @@
       <div class="container">
         <!-- Result Header -->
         <div class="result-header fade-in">
-          <h2>Your Career Type</h2>
+          <span class="label">Your Primary Career Type</span>
         </div>
 
         <!-- Tie Notice (shown when multiple types have same score) -->
         <div class="type-tie-notice hidden" id="tieNotice">
-          🎉 同率1位のタイプが複数あります！タブをクリックして詳細を確認
+          🎉 Multiple types tied for first! Click tabs to see details
         </div>
 
         <!-- Type Tabs (for ties) -->
@@ -39,8 +39,8 @@
 
         <!-- Main Type Card -->
         <div class="main-type-card fade-in" id="mainTypeCard">
-          <span class="type-group" id="typeGroup">A群：開拓・牽引</span>
-          <h1 class="type-name" id="typeName">ザ・パイオニア</h1>
+          <span class="type-group" id="typeGroup">GROUP A</span>
+          <h1 class="type-name" id="typeName">The Pioneer</h1>
           <p class="type-name-alt" id="typeNameAlt">開拓者</p>
           <p class="type-description" id="typeDescription">
             行動力がMAX。細かい管理は苦手だが、道を切り開くパワーが突出。
@@ -50,7 +50,7 @@
         <!-- Radar Chart Section -->
         <div class="chart-section">
           <div class="chart-container">
-            <h3 class="text-center mb-lg" style="font-size: var(--font-size-sm); font-weight: 700; color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.1em;">能力パラメータ</h3>
+            <h3>Ability Parameters</h3>
             <div class="chart-wrapper">
               <canvas id="radarChart"></canvas>
             </div>
@@ -61,19 +61,19 @@
         <div class="type-details fade-in" id="typeDetails">
           <!-- Chart Shape -->
           <div class="detail-section">
-            <h3>形状特徴</h3>
+            <h3>Chart Pattern</h3>
             <p id="chartShape">突破力特化型</p>
           </div>
 
           <!-- Company Size -->
           <div class="detail-section">
-            <h3>相性の良い企業規模</h3>
+            <h3>Best Fit Company Size</h3>
             <p id="companySize">スタートアップ（創業期）</p>
           </div>
 
           <!-- Keywords -->
           <div class="detail-section">
-            <h3>適した環境・キーワード</h3>
+            <h3>Keywords & Environment</h3>
             <div class="keywords-grid" id="keywords">
               <!-- Keywords will be rendered here -->
             </div>
@@ -83,7 +83,7 @@
         <!-- Score Breakdown -->
         <div class="type-details">
           <div class="detail-section">
-            <h3>タイプ別スコア</h3>
+            <h3>Score Breakdown</h3>
             <div class="score-breakdown" id="scoreBreakdown">
               <!-- Scores will be rendered here -->
             </div>
@@ -93,10 +93,10 @@
         <!-- Actions -->
         <div class="result-actions mt-xl">
           <button type="button" class="btn btn-primary btn-lg" id="retryBtn">
-            もう一度診断する
+            Retake Assessment
           </button>
           <a href="index.html" class="btn btn-secondary btn-lg">
-            トップに戻る
+            Back to Home
           </a>
         </div>
       </div>
@@ -105,7 +105,7 @@
     <!-- Footer -->
     <footer class="page-footer">
       <div class="container">
-        <p class="text-muted" id="completedAt">診断完了日時: --</p>
+        <p class="text-muted" id="completedAt">Completed: --</p>
       </div>
     </footer>
   </div>
@@ -211,8 +211,8 @@
 
       const group = GROUPS[type.group];
 
-      // Update main card
-      typeGroup.textContent = `${type.group}群：${group.name}`;
+      // Update main card - use English group name
+      typeGroup.textContent = `Group ${type.group} — ${group.name}`;
       typeName.textContent = type.name;
       typeNameAlt.textContent = type.nameAlt;
       typeDescription.textContent = type.description;
@@ -227,14 +227,20 @@
       `).join('');
     }
 
-    // Render radar chart - Vibrant purple theme
+    // Render radar chart - 2025 Gradient Purple Theme
     function renderRadarChart() {
       const type = getTypeById(selectedTypeId);
       if (!type) return;
 
       const ctx = document.getElementById('radarChart').getContext('2d');
+      
+      // Create gradient for the chart
+      const gradient = ctx.createLinearGradient(0, 0, 300, 300);
+      gradient.addColorStop(0, 'rgba(99, 102, 241, 0.3)');
+      gradient.addColorStop(0.5, 'rgba(168, 85, 247, 0.3)');
+      gradient.addColorStop(1, 'rgba(236, 72, 153, 0.3)');
 
-      // Chart.js radar chart configuration - Purple gradient theme
+      // Chart.js radar chart configuration - Dark theme
       radarChart = new Chart(ctx, {
         type: 'radar',
         data: {
@@ -242,14 +248,16 @@
           datasets: [{
             label: type.name,
             data: type.radarScores,
-            backgroundColor: 'rgba(124, 58, 237, 0.2)',
-            borderColor: 'rgba(124, 58, 237, 1)',
+            backgroundColor: gradient,
+            borderColor: '#a855f7',
             borderWidth: 2,
-            pointBackgroundColor: 'rgba(124, 58, 237, 1)',
-            pointBorderColor: '#fff',
+            pointBackgroundColor: '#a855f7',
+            pointBorderColor: '#ffffff',
             pointBorderWidth: 2,
             pointRadius: 5,
-            pointHoverRadius: 7
+            pointHoverRadius: 8,
+            pointHoverBackgroundColor: '#ec4899',
+            pointHoverBorderColor: '#ffffff'
           }]
         },
         options: {
@@ -264,29 +272,48 @@
                 stepSize: 1,
                 display: true,
                 backdropColor: 'transparent',
-                color: '#94a3b8',
+                color: 'rgba(255, 255, 255, 0.5)',
                 font: {
-                  size: 10
+                  size: 10,
+                  family: "'SF Mono', monospace"
                 }
               },
               pointLabels: {
                 font: {
-                  size: 12,
-                  weight: '600'
+                  size: 11,
+                  weight: '600',
+                  family: "'SF Pro Display', sans-serif"
                 },
-                color: '#1e293b'
+                color: 'rgba(255, 255, 255, 0.9)'
               },
               grid: {
-                color: 'rgba(124, 58, 237, 0.1)'
+                color: 'rgba(255, 255, 255, 0.08)'
               },
               angleLines: {
-                color: 'rgba(124, 58, 237, 0.1)'
+                color: 'rgba(255, 255, 255, 0.08)'
               }
             }
           },
           plugins: {
             legend: {
               display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleColor: '#ffffff',
+              bodyColor: '#ffffff',
+              borderColor: 'rgba(168, 85, 247, 0.5)',
+              borderWidth: 1,
+              padding: 12,
+              cornerRadius: 8,
+              displayColors: false,
+              titleFont: {
+                size: 14,
+                weight: '600'
+              },
+              bodyFont: {
+                size: 12
+              }
             }
           }
         }
@@ -312,10 +339,10 @@
         const isMainType = mainTypes.some(t => t.id === type.id);
         return `
           <div class="score-item">
-            <span class="score-type" style="${isMainType ? 'font-weight: 700; color: var(--color-primary);' : ''}">
+            <span class="score-type" style="${isMainType ? 'font-weight: 600; color: var(--color-accent);' : ''}">
               ${type.name}（${type.nameAlt}）
             </span>
-            <span class="score-value" style="${isMainType ? 'color: var(--color-primary);' : 'color: var(--color-text-light);'}">
+            <span class="score-value" style="${isMainType ? 'color: var(--color-text);' : ''}">
               ${score} / ${maxScore}
             </span>
           </div>
@@ -327,7 +354,7 @@
     function renderCompletedAt() {
       const date = storage.getCompletedAt();
       if (date) {
-        completedAt.textContent = `診断完了: ${formatDate(date)}`;
+        completedAt.textContent = `Completed: ${formatDate(date)}`;
       }
     }
 
