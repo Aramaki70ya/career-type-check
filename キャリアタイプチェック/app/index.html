@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>キャリアタイプ12診断</title>
+  <meta name="description" content="36問の質問に答えて、12のキャリアタイプからあなたに最も合ったタイプを診断します。転職活動やキャリア設計に役立ててください。">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Index page specific styles */
+    .index-page {
+      background: linear-gradient(180deg, var(--color-bg) 0%, #e8ecf3 100%);
+    }
+    
+    
+    .info-section {
+      background: var(--color-bg-card);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-2xl);
+      margin-top: var(--spacing-3xl);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .info-section h2 {
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+    }
+    
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-lg);
+    }
+    
+    .info-item {
+      text-align: center;
+      padding: var(--spacing-lg);
+    }
+    
+    .info-number {
+      font-size: var(--font-size-4xl);
+      font-weight: 700;
+      color: var(--color-accent);
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .info-label {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-light);
+    }
+  </style>
+</head>
+<body class="index-page">
+  <div class="page">
+    <!-- Header -->
+    <header class="page-header">
+      <div class="container">
+        <h1>キャリアタイプ12診断</h1>
+        <p>あなたの強み・価値観を可視化します</p>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="page-content">
+      <div class="container">
+        <!-- Hero Section -->
+        <section class="hero-section fade-in">
+          <h2 class="hero-title">自分に合ったキャリアを<br>見つけよう</h2>
+          <p class="hero-subtitle">
+            36問の質問に答えるだけで、12のキャリアタイプから<br>
+            あなたに最も合ったタイプを診断します。<br>
+            所要時間は約5〜10分です。
+          </p>
+          
+          <!-- Resume Notice -->
+          <div class="resume-notice hidden" id="resumeNotice">
+            <strong>前回の続きから再開できます</strong>
+            <span id="resumeProgress">12 / 36問 回答済み</span>
+          </div>
+          
+          <!-- Completed Notice -->
+          <div class="resume-notice hidden" id="completedNotice" style="border-color: var(--color-primary); color: var(--color-primary);">
+            <strong>診断が完了しています</strong>
+            <span id="completedInfo">結果を確認するか、新しく診断を始めてください</span>
+          </div>
+          
+          <!-- Actions -->
+          <div class="hero-actions" id="heroActions">
+            <!-- Buttons will be rendered dynamically -->
+          </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="feature-grid">
+          <div class="feature-card fade-in">
+            <div class="feature-icon">📊</div>
+            <h3 class="feature-title">5軸レーダーチャート</h3>
+            <p class="feature-description">
+              行動力・対人力・論理力・創造力・規律力の5つの軸であなたの特性を可視化します。
+            </p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon">🎯</div>
+            <h3 class="feature-title">12タイプ診断</h3>
+            <p class="feature-description">
+              パイオニア、クリエイターなど12のキャリアタイプからあなたに最適なタイプを特定します。
+            </p>
+          </div>
+          <div class="feature-card fade-in">
+            <div class="feature-icon">💼</div>
+            <h3 class="feature-title">適職キーワード</h3>
+            <p class="feature-description">
+              あなたに合った企業規模や環境、職種のキーワードを具体的に提示します。
+            </p>
+          </div>
+        </section>
+
+        <!-- Info Section -->
+        <section class="info-section fade-in">
+          <h2>診断について</h2>
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="info-number">36</div>
+              <div class="info-label">設問数</div>
+            </div>
+            <div class="info-item">
+              <div class="info-number">12</div>
+              <div class="info-label">キャリアタイプ</div>
+            </div>
+            <div class="info-item">
+              <div class="info-number">5</div>
+              <div class="info-label">評価軸</div>
+            </div>
+            <div class="info-item">
+              <div class="info-number">5-10</div>
+              <div class="info-label">所要時間（分）</div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+      <div class="container">
+        <p class="text-muted">© 2025 キャリアタイプ12診断</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="types.js"></script>
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // ========================================
+    // Index Page Logic
+    // ========================================
+
+    // DOM Elements
+    const resumeNotice = document.getElementById('resumeNotice');
+    const resumeProgress = document.getElementById('resumeProgress');
+    const completedNotice = document.getElementById('completedNotice');
+    const completedInfo = document.getElementById('completedInfo');
+    const heroActions = document.getElementById('heroActions');
+
+    // Initialize
+    function init() {
+      const hasProgress = storage.hasProgress();
+      const isCompleted = storage.isCompleted();
+      const answers = storage.getAnswers();
+      const answeredCount = Object.keys(answers).length;
+
+      if (isCompleted) {
+        // Show completed notice
+        completedNotice.classList.remove('hidden');
+        const completedDate = storage.getCompletedAt();
+        if (completedDate) {
+          completedInfo.textContent = `${formatDate(completedDate)} に診断完了`;
+        }
+        
+        // Render completed actions
+        heroActions.innerHTML = `
+          <a href="result.html" class="btn btn-primary btn-lg">結果を見る</a>
+          <button type="button" class="btn btn-secondary btn-lg" id="newDiagnosisBtn">
+            新しく診断する
+          </button>
+        `;
+        
+        document.getElementById('newDiagnosisBtn').addEventListener('click', handleNewDiagnosis);
+        
+      } else if (hasProgress) {
+        // Show resume notice
+        resumeNotice.classList.remove('hidden');
+        resumeProgress.textContent = `${answeredCount} / ${QUESTIONS.length}問 回答済み`;
+        
+        // Render resume actions
+        heroActions.innerHTML = `
+          <a href="questions.html" class="btn btn-primary btn-lg">続きから再開する</a>
+          <button type="button" class="btn btn-secondary btn-lg" id="resetBtn">
+            最初からやり直す
+          </button>
+        `;
+        
+        document.getElementById('resetBtn').addEventListener('click', handleReset);
+        
+      } else {
+        // Fresh start
+        heroActions.innerHTML = `
+          <a href="questions.html" class="btn btn-primary btn-lg">診断を始める</a>
+        `;
+      }
+    }
+
+    // Handle new diagnosis (clear and start fresh)
+    function handleNewDiagnosis() {
+      if (confirm('現在の診断結果をクリアして、新しく診断を始めますか？')) {
+        storage.clear();
+        navigation.goToQuestions();
+      }
+    }
+
+    // Handle reset (clear progress and start fresh)
+    function handleReset() {
+      if (confirm('回答をリセットして、最初からやり直しますか？')) {
+        storage.clear();
+        navigation.goToQuestions();
+      }
+    }
+
+    // Initialize on page load
+    init();
+  </script>
+</body>
+</html>
+

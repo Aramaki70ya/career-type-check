@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>キャリアレポート</title>
+    <style>
+        @page { size: A4; margin: 12mm; }
+        @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .page-break { page-break-before: always; }
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif; 
+            font-size: 10px; 
+            line-height: 1.6; 
+            color: #333; 
+            background: white;
+            padding: 8px;
+        }
+        .header { 
+            background: linear-gradient(135deg, #1a365d 0%, #2d4a7c 100%);
+            color: white; 
+            padding: 18px 20px; 
+            text-align: center; 
+            margin-bottom: 12px;
+            border-radius: 4px;
+        }
+        .header h1 { font-size: 20px; margin-bottom: 3px; letter-spacing: 2px; }
+        .header .subtitle { font-size: 11px; opacity: 0.9; margin-bottom: 8px; }
+        .header .info { font-size: 10px; opacity: 0.85; }
+        .header .info span { margin: 0 8px; }
+        
+        h2 { 
+            color: #1a365d; 
+            font-size: 13px; 
+            border-left: 4px solid #1a365d;
+            padding-left: 8px;
+            margin: 14px 0 8px; 
+        }
+        h3 { color: #1a365d; font-size: 11px; margin: 8px 0 5px; }
+        
+        .intro-message {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 4px;
+            font-size: 10px;
+            line-height: 1.7;
+        }
+        .intro-message strong { color: #1a365d; }
+        
+        .section { margin-bottom: 12px; }
+        
+        .box { 
+            background: #f8fafc; 
+            padding: 10px; 
+            margin: 6px 0; 
+            border-left: 3px solid #1a365d;
+            border-radius: 0 4px 4px 0;
+        }
+        .box h3 { margin-top: 0; margin-bottom: 6px; }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #ebf4ff 0%, #f0f7ff 100%);
+            border: 1px solid #bee3f8;
+            padding: 10px;
+            margin: 6px 0;
+            border-radius: 4px;
+        }
+        
+        ul { list-style: none; padding-left: 0; }
+        ul li { 
+            padding: 4px 0 4px 14px; 
+            position: relative; 
+            font-size: 10px; 
+        }
+        ul li:before { 
+            content: "▸"; 
+            position: absolute; 
+            left: 0; 
+            color: #1a365d; 
+            font-size: 8px;
+        }
+        
+        .grid { display: flex; gap: 12px; }
+        .grid > div { flex: 1; }
+        
+        .grid-3 { display: flex; gap: 8px; }
+        .grid-3 > div { flex: 1; }
+        
+        table { width: 100%; border-collapse: collapse; margin: 6px 0; font-size: 9px; }
+        table th { 
+            background: #1a365d; 
+            color: white; 
+            padding: 6px 8px; 
+            text-align: left;
+            font-weight: normal;
+        }
+        table td { padding: 6px 8px; border-bottom: 1px solid #e2e8f0; }
+        
+        .tags { margin: 6px 0; }
+        .tag { 
+            display: inline-block; 
+            background: #e2e8f0; 
+            padding: 3px 10px; 
+            border-radius: 12px; 
+            font-size: 9px; 
+            margin: 2px; 
+        }
+        .tag-primary { background: #1a365d; color: white; }
+        .tag-secondary { background: #4a5568; color: white; }
+        
+        .card { 
+            background: white;
+            border: 1px solid #e2e8f0; 
+            padding: 10px; 
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .card h4 { 
+            color: #1a365d; 
+            font-size: 10px; 
+            margin-bottom: 4px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .card p { font-size: 9px; color: #4a5568; line-height: 1.5; }
+        
+        .challenge-item {
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            padding: 8px 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+        }
+        .challenge-item .challenge { font-size: 10px; margin-bottom: 4px; }
+        .challenge-item .action { 
+            font-size: 9px; 
+            color: #1a365d; 
+            padding-left: 12px;
+            border-left: 2px solid #1a365d;
+        }
+        
+        .vision-card {
+            text-align: center;
+            padding: 8px;
+            background: #f8fafc;
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+        }
+        .vision-card .period { 
+            font-size: 9px; 
+            color: #718096;
+            margin-bottom: 3px;
+        }
+        .vision-card .content { 
+            font-size: 10px; 
+            color: #1a365d;
+            font-weight: bold;
+        }
+        
+        .message { 
+            background: linear-gradient(135deg, #1a365d 0%, #2d4a7c 100%);
+            color: white;
+            padding: 15px; 
+            text-align: center; 
+            margin-top: 12px;
+            border-radius: 4px;
+        }
+        .message p { font-size: 10px; line-height: 1.8; margin-bottom: 8px; }
+        .message .sig { 
+            text-align: right; 
+            font-size: 10px;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+        
+        .divider { border-top: 1px solid #e2e8f0; margin: 10px 0; }
+        
+        .footer-note {
+            font-size: 8px;
+            color: #a0aec0;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <div class="header">
+        <h1>キャリアレポート</h1>
+        <div class="subtitle">ヒアリング内容のまとめ</div>
+        <div class="info">
+            <span><?= data.candidateName || '候補者' ?> 様</span>
+            <span>|</span>
+            <span><?= data.date ?></span>
+        </div>
+    </div>
+
+
+    <!-- 転職の背景・想い -->
+    <div class="section">
+        <h2>転職理由・背景</h2>
+        <div class="highlight-box">
+            <ul>
+                <? if (data.whyNow && data.whyNow.length > 0) { ?>
+                    <? for (var i = 0; i < data.whyNow.length; i++) { ?>
+                        <li><?= data.whyNow[i] ?></li>
+                    <? } ?>
+                <? } else { ?>
+                    <li>（ヒアリング内容から抽出）</li>
+                <? } ?>
+            </ul>
+        </div>
+    </div>
+
+    <!-- あなたの強み -->
+    <div class="section">
+        <h2>強み・価値観</h2>
+        <div class="grid">
+            <div class="box">
+                <h3>コアスキル・強み</h3>
+                <ul>
+                    <? if (data.strengths && data.strengths.length > 0) { ?>
+                        <? for (var i = 0; i < data.strengths.length; i++) { ?>
+                            <li><?= data.strengths[i] ?></li>
+                        <? } ?>
+                    <? } else { ?>
+                        <li>（ヒアリング内容から抽出）</li>
+                    <? } ?>
+                </ul>
+            </div>
+            <div class="box">
+                <h3>大切にしている価値観</h3>
+                <ul>
+                    <? if (data.careerAxis && data.careerAxis.length > 0) { ?>
+                        <? for (var i = 0; i < data.careerAxis.length; i++) { ?>
+                            <li><?= data.careerAxis[i] ?></li>
+                        <? } ?>
+                    <? } else { ?>
+                        <li>（ヒアリング内容から抽出）</li>
+                    <? } ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- タイプ・特徴 -->
+    <? if (data.behaviorTraits && data.behaviorTraits.length > 0) { ?>
+    <div class="section">
+        <h2>あなたのタイプ</h2>
+        <div class="tags">
+            <? for (var i = 0; i < data.behaviorTraits.length; i++) { ?>
+                <span class="tag tag-primary"><?= data.behaviorTraits[i] ?></span>
+            <? } ?>
+        </div>
+    </div>
+    <? } ?>
+
+    <div class="divider"></div>
+
+    <!-- これまでの経験・実績 -->
+    <div class="section">
+        <h2>これまでの経験・実績</h2>
+        <div class="grid">
+            <div>
+                <h3>主な業務経験</h3>
+                <ul>
+                    <? if (data.currentWork && data.currentWork.description && data.currentWork.description.length > 0) { ?>
+                        <? for (var i = 0; i < data.currentWork.description.length; i++) { ?>
+                            <li><?= data.currentWork.description[i] ?></li>
+                        <? } ?>
+                    <? } else { ?>
+                        <li>（ヒアリング内容から抽出）</li>
+                    <? } ?>
+                </ul>
+            </div>
+            <div>
+                <h3>成果・実績</h3>
+                <ul>
+                    <? if (data.currentWork && data.currentWork.achievements && data.currentWork.achievements.length > 0) { ?>
+                        <? for (var i = 0; i < data.currentWork.achievements.length; i++) { ?>
+                            <li><?= data.currentWork.achievements[i] ?></li>
+                        <? } ?>
+                    <? } else { ?>
+                        <li>（ヒアリング内容から抽出）</li>
+                    <? } ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 希望する働き方 -->
+    <div class="section">
+        <h2>希望する働き方・環境</h2>
+        <table>
+            <tr><th width="25%">項目</th><th>希望内容</th></tr>
+            <tr><td>勤務スタイル</td><td><?= data.workStyle && data.workStyle.remote ? data.workStyle.remote : '（ヒアリング内容から抽出）' ?></td></tr>
+            <tr><td>上司・マネジメント</td><td><?= data.workStyle && data.workStyle.management ? data.workStyle.management : '（ヒアリング内容から抽出）' ?></td></tr>
+            <tr><td>組織・チーム文化</td><td><?= data.workStyle && data.workStyle.team ? data.workStyle.team : '（ヒアリング内容から抽出）' ?></td></tr>
+        </table>
+    </div>
+
+    <!-- 将来のビジョン -->
+    <div class="section">
+        <h2>将来のキャリアビジョン</h2>
+        <div class="grid-3">
+            <div class="vision-card">
+                <div class="period">1年後</div>
+                <div class="content"><?= data.vision && data.vision.oneYear ? data.vision.oneYear : '—' ?></div>
+            </div>
+            <div class="vision-card">
+                <div class="period">3年後</div>
+                <div class="content"><?= data.vision && data.vision.threeYears ? data.vision.threeYears : '—' ?></div>
+            </div>
+            <div class="vision-card">
+                <div class="period">5年後</div>
+                <div class="content"><?= data.vision && data.vision.fiveYears && data.vision.fiveYears.goal ? data.vision.fiveYears.goal : (data.vision && data.vision.fiveYears && data.vision.fiveYears.salary ? '年収 ' + data.vision.fiveYears.salary : '—') ?></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 課題 -->
+    <div class="section">
+        <h2>課題・苦手なこと</h2>
+        <ul>
+            <? if (data.challenges && data.challenges.length > 0) { ?>
+                <? for (var i = 0; i < data.challenges.length; i++) { ?>
+                    <li><?= data.challenges[i].issue || data.challenges[i] ?></li>
+                <? } ?>
+            <? } else { ?>
+                <li>（ヒアリング内容から抽出）</li>
+            <? } ?>
+        </ul>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- キャリアの方向性 -->
+    <div class="section">
+        <h2>キャリアの方向性（参考）</h2>
+        <p style="font-size: 9px; color: #718096; margin-bottom: 8px;">ヒアリング内容を踏まえた、選択肢のご参考です。</p>
+        <div class="grid-3">
+            <? if (data.careerDirections && data.careerDirections.length > 0) { ?>
+                <? for (var i = 0; i < Math.min(data.careerDirections.length, 3); i++) { ?>
+                    <div class="card">
+                        <h4><?= String.fromCharCode(65 + i) ?>. <?= data.careerDirections[i].title ?></h4>
+                        <p><?= data.careerDirections[i].description ?></p>
+                    </div>
+                <? } ?>
+            <? } else { ?>
+                <div class="card">
+                    <h4>A. 方向性1</h4>
+                    <p>（ヒアリング内容を基にAIが提案）</p>
+                </div>
+                <div class="card">
+                    <h4>B. 方向性2</h4>
+                    <p>（ヒアリング内容を基にAIが提案）</p>
+                </div>
+                <div class="card">
+                    <h4>C. 方向性3</h4>
+                    <p>（ヒアリング内容を基にAIが提案）</p>
+                </div>
+            <? } ?>
+        </div>
+    </div>
+
+    <!-- 今後の進め方 -->
+    <div class="section">
+        <h2>今後の進め方</h2>
+        <table>
+            <tr><th width="20%">ステップ</th><th>内容</th><th width="20%">目安期間</th></tr>
+            <tr><td>Step 1</td><td>このレポートを基に、転職の軸と優先順位を整理</td><td>〜1週間</td></tr>
+            <tr><td>Step 2</td><td>応募企業の選定、書類作成・ブラッシュアップ</td><td>1〜3週間</td></tr>
+            <tr><td>Step 3</td><td>面接対策、企業との面談・選考</td><td>3〜6週間</td></tr>
+            <tr><td>Step 4</td><td>内定〜条件交渉、最終意思決定</td><td>6〜8週間</td></tr>
+        </table>
+    </div>
+
+    <!-- メッセージ -->
+    <div class="message">
+        <p>
+            ご不明な点やご質問があれば、いつでもお気軽にご連絡ください。<br>
+            転職活動を全力でサポートいたします。
+        </p>
+        <div class="sig">
+            <?= data.companyName ?><br>
+            <?= data.consultantName ?>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        ※ このレポートはヒアリング内容を基に作成しています
+    </div>
+</body>
+</html>

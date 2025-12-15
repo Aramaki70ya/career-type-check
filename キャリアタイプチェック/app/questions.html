@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>質問 | キャリアタイプ12診断</title>
+  <meta name="description" content="36問の質問に答えて、あなたのキャリアタイプを診断しましょう。">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <!-- Header -->
+    <header class="page-header">
+      <div class="container">
+        <h1>キャリアタイプ診断</h1>
+        <p>あなたに当てはまるものを選んでください</p>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="page-content">
+      <div class="container">
+        <!-- Progress -->
+        <div class="progress-container">
+          <div class="progress-info">
+            <span id="progressText">1 / 36</span>
+            <span id="progressPercent">0%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- Warning Message -->
+        <div class="warning-message" id="warningMessage">
+          回答を選択してください
+        </div>
+
+        <!-- Question Card -->
+        <div class="question-card fade-in" id="questionCard">
+          <span class="question-number" id="questionNumber">Q1</span>
+          <p class="question-text" id="questionText">質問文がここに表示されます</p>
+          
+          <div class="choices" id="choicesContainer">
+            <!-- Choices will be rendered here -->
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="question-nav">
+          <button type="button" class="btn btn-secondary" id="prevBtn">
+            ← 前へ
+          </button>
+          <button type="button" class="btn btn-primary" id="nextBtn">
+            次へ →
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+      <div class="container">
+        <a href="index.html" class="btn btn-sm btn-outline" id="exitBtn">診断を中断する</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="types.js"></script>
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // ========================================
+    // Questions Page Logic
+    // ========================================
+
+    // State
+    let currentIndex = 0;
+    let answers = {};
+
+    // DOM Elements
+    const progressText = document.getElementById('progressText');
+    const progressPercent = document.getElementById('progressPercent');
+    const progressFill = document.getElementById('progressFill');
+    const warningMessage = document.getElementById('warningMessage');
+    const questionCard = document.getElementById('questionCard');
+    const questionNumber = document.getElementById('questionNumber');
+    const questionText = document.getElementById('questionText');
+    const choicesContainer = document.getElementById('choicesContainer');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    // Initialize
+    function init() {
+      // Load saved state
+      answers = storage.getAnswers();
+      currentIndex = storage.getCurrentIndex();
+      
+      // Ensure index is valid
+      if (currentIndex >= QUESTIONS.length) {
+        currentIndex = QUESTIONS.length - 1;
+      }
+      
+      // Render
+      renderQuestion();
+      updateProgress();
+      updateNavButtons();
+    }
+
+    // Render current question
+    function renderQuestion() {
+      const question = QUESTIONS[currentIndex];
+      if (!question) return;
+
+      // Update question display
+      questionNumber.textContent = `Q${currentIndex + 1}`;
+      questionText.textContent = question.text;
+
+      // Render choices
+      const currentAnswer = answers[question.id];
+      choicesContainer.innerHTML = CHOICE_LABELS.map((choice, index) => `
+        <div class="choice-item">
+          <input 
+            type="radio" 
+            id="choice${index}" 
+            name="answer" 
+            value="${choice.value}"
+            class="choice-input"
+            ${currentAnswer === choice.value ? 'checked' : ''}
+          >
+          <label for="choice${index}" class="choice-label">
+            <span class="choice-radio"></span>
+            <span class="choice-text">${choice.label}</span>
+          </label>
+        </div>
+      `).join('');
+
+      // Add event listeners to choices
+      const inputs = choicesContainer.querySelectorAll('.choice-input');
+      inputs.forEach(input => {
+        input.addEventListener('change', handleAnswerChange);
+      });
+
+      // Hide warning
+      warningMessage.classList.remove('visible');
+
+      // Animation
+      questionCard.classList.remove('fade-in');
+      void questionCard.offsetWidth; // Trigger reflow
+      questionCard.classList.add('fade-in');
+    }
+
+    // Handle answer selection
+    function handleAnswerChange(event) {
+      const question = QUESTIONS[currentIndex];
+      const value = parseInt(event.target.value, 10);
+      
+      // Save answer
+      answers[question.id] = value;
+      storage.saveAnswers(answers);
+      
+      // Hide warning
+      warningMessage.classList.remove('visible');
+    }
+
+    // Update progress display
+    function updateProgress() {
+      const answeredCount = Object.keys(answers).length;
+      const total = QUESTIONS.length;
+      const percent = Math.round((answeredCount / total) * 100);
+      
+      progressText.textContent = `${currentIndex + 1} / ${total}`;
+      progressPercent.textContent = `${percent}%`;
+      progressFill.style.width = `${percent}%`;
+    }
+
+    // Update navigation buttons
+    function updateNavButtons() {
+      // Prev button
+      prevBtn.disabled = currentIndex === 0;
+      
+      // Next/Submit button
+      const isLastQuestion = currentIndex === QUESTIONS.length - 1;
+      nextBtn.textContent = isLastQuestion ? '結果を見る' : '次へ →';
+    }
+
+    // Go to previous question
+    function goPrev() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        storage.saveCurrentIndex(currentIndex);
+        renderQuestion();
+        updateProgress();
+        updateNavButtons();
+      }
+    }
+
+    // Go to next question or submit
+    function goNext() {
+      const question = QUESTIONS[currentIndex];
+      
+      // Check if answered
+      if (answers[question.id] === undefined) {
+        warningMessage.classList.add('visible');
+        return;
+      }
+      
+      if (currentIndex < QUESTIONS.length - 1) {
+        // Go to next question
+        currentIndex++;
+        storage.saveCurrentIndex(currentIndex);
+        renderQuestion();
+        updateProgress();
+        updateNavButtons();
+      } else {
+        // All questions answered - check completion
+        const allAnswered = QUESTIONS.every(q => answers[q.id] !== undefined);
+        
+        if (allAnswered) {
+          // Save completion timestamp
+          storage.saveCompletedAt(new Date());
+          // Go to results
+          navigation.goToResult();
+        } else {
+          // Find first unanswered question
+          const firstUnanswered = QUESTIONS.findIndex(q => answers[q.id] === undefined);
+          if (firstUnanswered >= 0) {
+            currentIndex = firstUnanswered;
+            storage.saveCurrentIndex(currentIndex);
+            renderQuestion();
+            updateProgress();
+            updateNavButtons();
+            warningMessage.textContent = '未回答の質問があります';
+            warningMessage.classList.add('visible');
+          }
+        }
+      }
+    }
+
+    // Event Listeners
+    prevBtn.addEventListener('click', goPrev);
+    nextBtn.addEventListener('click', goNext);
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        goPrev();
+      } else if (event.key === 'ArrowRight' || event.key === 'Enter') {
+        goNext();
+      }
+    });
+
+    // Initialize on page load
+    init();
+  </script>
+</body>
+</html>

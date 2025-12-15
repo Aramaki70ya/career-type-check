@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>キャリアレポート生成ツール</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif; background: #f5f5f5; padding: 15px; font-size: 14px; }
+        .container { max-width: 1000px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #1a365d; margin-bottom: 20px; border-bottom: 3px solid #1a365d; padding-bottom: 10px; font-size: 22px; }
+        h2 { color: #1a365d; margin: 20px 0 12px; font-size: 16px; border-left: 4px solid #1a365d; padding-left: 10px; }
+        h3 { color: #2d3748; font-size: 14px; margin: 12px 0 8px; }
+        
+        .step { display: none; }
+        .step.active { display: block; }
+        
+        .step-indicator { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
+        .step-badge { padding: 8px 20px; background: #e2e8f0; border-radius: 20px; font-size: 13px; color: #718096; }
+        .step-badge.active { background: #1a365d; color: #fff; }
+        .step-badge.done { background: #38a169; color: #fff; }
+        
+        label { display: block; font-weight: bold; color: #2d3748; margin-bottom: 6px; font-size: 13px; }
+        textarea, input[type="text"] { width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 13px; }
+        textarea { min-height: 200px; font-family: monospace; }
+        textarea:focus, input:focus { outline: none; border-color: #1a365d; }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .form-section { background: #f8fafc; padding: 15px; border-radius: 6px; margin-bottom: 15px; }
+        
+        .list-input { margin-bottom: 8px; }
+        .list-input input { margin-bottom: 5px; }
+        .add-btn { background: #e2e8f0; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; color: #4a5568; }
+        .add-btn:hover { background: #cbd5e0; }
+        .remove-btn { background: #fed7d7; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; color: #c53030; margin-left: 5px; }
+        
+        .button-group { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+        button { padding: 10px 24px; font-size: 14px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-primary { background: #1a365d; color: #fff; }
+        .btn-primary:hover:not(:disabled) { background: #2d3748; }
+        .btn-secondary { background: #718096; color: #fff; }
+        .btn-secondary:hover:not(:disabled) { background: #4a5568; }
+        .btn-success { background: #38a169; color: #fff; }
+        .btn-success:hover:not(:disabled) { background: #2f855a; }
+        
+        .loading { display: none; text-align: center; padding: 20px; }
+        .loading.active { display: block; }
+        .spinner { border: 3px solid #f3f3f3; border-top: 3px solid #1a365d; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto 10px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .message { padding: 12px; border-radius: 4px; margin: 15px 0; display: none; }
+        .message.active { display: block; }
+        .error { background: #fed7d7; color: #c53030; }
+        .success { background: #c6f6d5; color: #22543d; }
+        
+        .preview-container { border: 1px solid #e2e8f0; border-radius: 4px; }
+        .preview-frame { width: 100%; height: 450px; border: none; }
+        
+        .tip { background: #fef3c7; border: 1px solid #f59e0b; padding: 10px 12px; border-radius: 4px; font-size: 12px; margin-bottom: 15px; }
+        .tip strong { color: #92400e; }
+        
+        .options { margin: 12px 0; }
+        .options label { display: inline-flex; align-items: center; gap: 6px; font-weight: normal; cursor: pointer; }
+        .options input[type="checkbox"] { width: 16px; height: 16px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📄 キャリアレポート生成ツール</h1>
+        
+        <div class="step-indicator">
+            <span class="step-badge active" id="badge1">1. データ入力</span>
+            <span class="step-badge" id="badge2">2. 内容編集</span>
+            <span class="step-badge" id="badge3">3. PDF保存</span>
+        </div>
+
+        <!-- ステップ1: データ入力 -->
+        <div class="step active" id="step1">
+            <div class="form-group">
+                <label>文字起こしデータを貼り付け：</label>
+                <textarea id="transcript" placeholder="ヒアリングの文字起こしデータを貼り付けてください..."></textarea>
+            </div>
+            
+            <div class="options">
+                <label>
+                    <input type="checkbox" id="useGemini" checked>
+                    AIで文章を読みやすく整理
+                </label>
+                <button class="btn-check" onclick="checkApiKey()" style="margin-left: 10px; padding: 5px 10px; font-size: 11px; background: #718096; color: #fff; border: none; border-radius: 4px; cursor: pointer;">API設定確認</button>
+                <span id="apiStatus" style="margin-left: 8px; font-size: 11px;"></span>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn-primary" onclick="analyzeData()">データを解析 →</button>
+                <button class="btn-secondary" onclick="loadSample()">サンプル読み込み</button>
+            </div>
+        </div>
+
+        <!-- ステップ2: 内容編集 -->
+        <div class="step" id="step2">
+            <div class="tip">
+                <strong>💡 ヒント：</strong> 各項目を自由に編集できます。不要な項目は空欄にしてください。
+            </div>
+            
+            <div class="form-section">
+                <h3>基本情報</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>候補者名</label>
+                        <input type="text" id="edit_candidateName">
+                    </div>
+                    <div class="form-group">
+                        <label>作成日</label>
+                        <input type="text" id="edit_date">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>送付主（コンサルタント名）</label>
+                        <input type="text" id="edit_consultantName">
+                    </div>
+                    <div class="form-group">
+                        <label>会社名</label>
+                        <input type="text" id="edit_companyName">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>転職理由・背景</h2>
+                <div id="whyNow_list" class="list-input"></div>
+                <button class="add-btn" onclick="addListItem('whyNow')">+ 項目を追加</button>
+            </div>
+            
+            <div class="form-section">
+                <h2>強み</h2>
+                <div id="strengths_list" class="list-input"></div>
+                <button class="add-btn" onclick="addListItem('strengths')">+ 項目を追加</button>
+            </div>
+            
+            <div class="form-section">
+                <h2>キャリア軸</h2>
+                <div id="careerAxis_list" class="list-input"></div>
+                <button class="add-btn" onclick="addListItem('careerAxis')">+ 項目を追加</button>
+            </div>
+            
+            <div class="form-section">
+                <h2>現職の業務</h2>
+                <h3>業務内容</h3>
+                <div id="workDesc_list" class="list-input"></div>
+                <button class="add-btn" onclick="addListItem('workDesc')">+ 項目を追加</button>
+                
+                <h3 style="margin-top: 15px;">成果・実績</h3>
+                <div id="workAchieve_list" class="list-input"></div>
+                <button class="add-btn" onclick="addListItem('workAchieve')">+ 項目を追加</button>
+            </div>
+            
+            <div class="form-section">
+                <h2>働き方の希望</h2>
+                <div class="form-group">
+                    <label>リモート比率</label>
+                    <input type="text" id="edit_workStyle_remote">
+                </div>
+                <div class="form-group">
+                    <label>マネジメント</label>
+                    <input type="text" id="edit_workStyle_management">
+                </div>
+                <div class="form-group">
+                    <label>チーム文化</label>
+                    <input type="text" id="edit_workStyle_team">
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>将来のビジョン</h2>
+                <div class="form-group">
+                    <label>1年後</label>
+                    <input type="text" id="edit_vision_oneYear">
+                </div>
+                <div class="form-group">
+                    <label>3年後</label>
+                    <input type="text" id="edit_vision_threeYears">
+                </div>
+                <div class="form-group">
+                    <label>5年後（年収）</label>
+                    <input type="text" id="edit_vision_fiveYears_salary">
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>課題・苦手なこと</h2>
+                <div id="challenges_list" class="list-input"></div>
+                <button class="add-btn" onclick="addListItem('challenges')">+ 項目を追加</button>
+            </div>
+            
+            <div class="form-section">
+                <h2>あなたのタイプ</h2>
+                <p style="font-size: 11px; color: #718096; margin-bottom: 10px;">カンマ区切りで編集可</p>
+                <input type="text" id="edit_behaviorTraits" placeholder="例: 聞き上手, チームワーク重視, コツコツ型">
+            </div>
+            
+            <div class="form-section">
+                <h2>キャリア方向性の提案</h2>
+                <p style="font-size: 11px; color: #718096; margin-bottom: 10px;">AIが提案するキャリアの選択肢</p>
+                <div id="careerDirections_list"></div>
+                <button class="add-btn" onclick="addCareerDirection()">+ 方向性を追加</button>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn-primary" onclick="generatePreview()">プレビュー生成 →</button>
+                <button class="btn-secondary" onclick="goToStep(1)">← 戻る</button>
+            </div>
+        </div>
+
+        <!-- ステップ3: プレビュー・PDF保存 -->
+        <div class="step" id="step3">
+            <div class="tip">
+                <strong>📥 PDFの保存方法：</strong> 
+                「PDFとして保存」→ 印刷ダイアログで「送信先: PDFに保存」→「保存」
+            </div>
+            
+            <div class="button-group" style="margin-bottom: 15px;">
+                <button class="btn-success" onclick="openPrintWindow()">📥 PDFとして保存</button>
+                <button class="btn-secondary" onclick="goToStep(2)">← 編集に戻る</button>
+                <button class="btn-secondary" onclick="resetAll()">最初からやり直す</button>
+            </div>
+            
+            <div class="preview-container">
+                <iframe id="previewFrame" class="preview-frame"></iframe>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <span id="loadingText">処理中...</span>
+        </div>
+        
+        <div class="message error" id="error"></div>
+        <div class="message success" id="success"></div>
+    </div>
+
+    <script>
+        let currentData = null;
+        let reportHTML = '';
+        let appConfig = { consultantName: '石井 貴大', companyName: '女性活躍カンパニー' };
+
+        // 初期化: 設定を読み込む
+        (function() {
+            google.script.run
+                .withSuccessHandler(function(config) {
+                    if (config) {
+                        appConfig = config;
+                        console.log('設定を読み込みました:', appConfig);
+                    }
+                })
+                .withFailureHandler(function(err) {
+                    console.warn('設定の読み込みに失敗しました:', err);
+                })
+                .getClientConfig();
+        })();
+
+        // APIキー確認
+        function checkApiKey() {
+            const statusEl = document.getElementById('apiStatus');
+            statusEl.textContent = '確認中...';
+            statusEl.style.color = '#718096';
+            
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    if (result.success) {
+                        statusEl.textContent = '✅ ' + result.message;
+                        statusEl.style.color = '#38a169';
+                    } else {
+                        statusEl.textContent = '❌ ' + result.message;
+                        statusEl.style.color = '#c53030';
+                    }
+                })
+                .withFailureHandler(function(err) {
+                    statusEl.textContent = '❌ エラー: ' + err.message;
+                    statusEl.style.color = '#c53030';
+                })
+                .checkGeminiApiKey();
+        }
+
+        // サンプルデータ読み込み
+        function loadSample() {
+            document.getElementById('transcript').value = `# カウンセリングヒアリング 文字起こしデータ
+
+**日時：** 2025年1月15日（水）14:00-15:30  
+**参加者：** 石井 貴大（カウンセラー）、田中 花子（候補者）
+
+## 【転職理由・背景（Why Now）】
+
+**田中：** 今の会社は大手商社で営業を担当していますが、決まったプロセスに沿って動くことが多く、自分で新しいことを提案する機会がありません。
+
+**田中：** 年功序列が強く、成果を出しても評価に反映されにくいです。
+
+**田中：** 同世代の友人が転職して活躍しているのを見て、自分も動きたいと思いました。
+
+## 【現職の業務・成果】
+
+**田中：** 製造業のお客様を担当し、サプライチェーン全体をサポートしています。取引先20社、年間売上約3億円を担当。
+
+**田中：** 3年前に新規開拓で年間5000万円の取引を立ち上げました。
+
+**田中：** 去年、既存顧客の取引量を30%増加させました。
+
+## 【強み・行動特性】
+
+**田中：** お客様の話をじっくり聞いて課題を見つけ出すことが得意です。
+
+**田中：** 人との関係構築が得意で、初対面でもすぐ打ち解けられます。
+
+**田中：** 複数案件を同時に管理できます。
+
+## 【キャリア軸・価値観】
+
+**田中：** 成長できる環境であること。
+
+**田中：** チームと信頼関係を築けること。
+
+**田中：** 自分の提案が形になること。
+
+## 【働き方・環境の希望】
+
+**田中：** 週2〜3日出社のハイブリッド希望です。
+
+**田中：** 支援型のマネージャーが理想です。
+
+## 【将来のビジョン】
+
+**田中：** 1年後は新環境で成果を出したい。
+
+**田中：** 3年後は営業マネージャーとしてチームを率いたい。
+
+**田中：** 5年後は年収800万円以上で事業責任者になりたい。
+
+## 【課題・苦手領域】
+
+**田中：** 人前で話すことが苦手で緊張します。
+
+**田中：** 数字管理やデータ分析があまり得意ではありません。`;
+            showMsg('success', 'サンプルデータを読み込みました');
+        }
+
+        // データ解析
+        function analyzeData() {
+            const text = document.getElementById('transcript').value;
+            if (!text.trim()) {
+                showMsg('error', '文字起こしデータを入力してください');
+                return;
+            }
+            
+            const useGemini = document.getElementById('useGemini').checked;
+            showLoading(useGemini ? 'ヒアリング内容を整理中...（30秒ほど）' : 'データを解析中...');
+            
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    if (result.success) {
+                        currentData = result.data;
+                        populateEditForm(currentData);
+                        goToStep(2);
+                        showMsg('success', 'データを解析しました。内容を確認・編集してください。');
+                    } else {
+                        showMsg('error', 'エラー: ' + result.error);
+                    }
+                })
+                .withFailureHandler(function(err) {
+                    hideLoading();
+                    showMsg('error', 'エラー: ' + err.message);
+                })
+                .analyzeTranscript(text, useGemini);
+        }
+
+        // 編集フォームにデータを反映
+        function populateEditForm(data) {
+            // 基本情報
+            document.getElementById('edit_candidateName').value = data.candidateName || '';
+            document.getElementById('edit_date').value = data.date || '';
+            document.getElementById('edit_consultantName').value = data.consultantName || appConfig.consultantName || '';
+            document.getElementById('edit_companyName').value = data.companyName || appConfig.companyName || '';
+            
+            populateList('whyNow', data.whyNow || []);
+            populateList('strengths', data.strengths || []);
+            populateList('careerAxis', data.careerAxis || []);
+            populateList('workDesc', data.currentWork?.description || []);
+            populateList('workAchieve', data.currentWork?.achievements || []);
+            
+            // 課題（新形式: {issue, action}）
+            populateChallenges(data.challenges || []);
+            
+            document.getElementById('edit_workStyle_remote').value = data.workStyle?.remote || '';
+            document.getElementById('edit_workStyle_management').value = data.workStyle?.management || '';
+            document.getElementById('edit_workStyle_team').value = data.workStyle?.team || '';
+            
+            document.getElementById('edit_vision_oneYear').value = data.vision?.oneYear || '';
+            document.getElementById('edit_vision_threeYears').value = data.vision?.threeYears || '';
+            document.getElementById('edit_vision_fiveYears_salary').value = data.vision?.fiveYears?.salary || '';
+            
+            // 行動特性（配列→カンマ区切り文字列）
+            document.getElementById('edit_behaviorTraits').value = (data.behaviorTraits || []).join(', ');
+            
+            // キャリア方向性
+            populateCareerDirections(data.careerDirections || []);
+        }
+        
+        // 課題リストを反映（シンプルに課題のみ）
+        function populateChallenges(challenges) {
+            const container = document.getElementById('challenges_list');
+            container.innerHTML = '';
+            if (challenges.length === 0) {
+                addListItem('challenges');
+            } else {
+                challenges.forEach(function(item) {
+                    const text = typeof item === 'string' ? item : (item.issue || '');
+                    addListItem('challenges', text);
+                });
+            }
+        }
+        
+        // キャリア方向性リストを反映
+        function populateCareerDirections(directions) {
+            const container = document.getElementById('careerDirections_list');
+            container.innerHTML = '';
+            if (directions.length === 0) {
+                addCareerDirection();
+            } else {
+                directions.forEach(function(item) {
+                    addCareerDirection(item.title || '', item.description || '');
+                });
+            }
+        }
+        
+        // キャリア方向性を追加
+        function addCareerDirection(title, description) {
+            const container = document.getElementById('careerDirections_list');
+            const index = container.children.length;
+            const labels = ['A', 'B', 'C', 'D', 'E'];
+            const div = document.createElement('div');
+            div.style.marginBottom = '10px';
+            div.style.padding = '10px';
+            div.style.background = '#f8fafc';
+            div.style.borderRadius = '4px';
+            div.style.border = '1px solid #e2e8f0';
+            div.innerHTML = `
+                <div style="display:flex; align-items:center; margin-bottom:5px;">
+                    <label style="width:80px; font-size:11px; font-weight:bold;">${labels[index] || ''}. タイトル:</label>
+                    <input type="text" class="direction-title" value="${title || ''}" style="flex:1;" placeholder="例: 成長企業の営業マネージャー">
+                    <button class="remove-btn" onclick="this.parentElement.parentElement.remove()" style="margin-left:5px;">×</button>
+                </div>
+                <div style="display:flex; align-items:center;">
+                    <label style="width:80px; font-size:11px;">説明:</label>
+                    <input type="text" class="direction-desc" value="${description || ''}" style="flex:1;" placeholder="例: スタートアップで0→1経験を積む">
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        // リスト項目を反映
+        function populateList(id, items) {
+            const container = document.getElementById(id + '_list');
+            container.innerHTML = '';
+            if (items.length === 0) {
+                addListItem(id);
+            } else {
+                items.forEach(function(item) {
+                    addListItem(id, item);
+                });
+            }
+        }
+
+        // リスト項目を追加
+        function addListItem(id, value) {
+            const container = document.getElementById(id + '_list');
+            const div = document.createElement('div');
+            div.style.display = 'flex';
+            div.style.alignItems = 'center';
+            div.style.marginBottom = '5px';
+            div.innerHTML = `
+                <input type="text" class="list-item-${id}" value="${value || ''}" style="flex:1;">
+                <button class="remove-btn" onclick="this.parentElement.remove()">×</button>
+            `;
+            container.appendChild(div);
+        }
+
+        // フォームからデータを収集
+        function collectFormData() {
+            const getListValues = function(id) {
+                const inputs = document.querySelectorAll('.list-item-' + id);
+                const values = [];
+                inputs.forEach(function(input) {
+                    if (input.value.trim()) values.push(input.value.trim());
+                });
+                return values;
+            };
+            
+            // 課題を収集（シンプルにissueのみ）
+            const getChallenges = function() {
+                const inputs = document.querySelectorAll('.list-item-challenges');
+                const challenges = [];
+                inputs.forEach(function(input) {
+                    if (input.value.trim()) {
+                        challenges.push({ issue: input.value.trim() });
+                    }
+                });
+                return challenges;
+            };
+            
+            // キャリア方向性を収集
+            const getCareerDirections = function() {
+                const titles = document.querySelectorAll('.direction-title');
+                const descs = document.querySelectorAll('.direction-desc');
+                const directions = [];
+                titles.forEach(function(input, i) {
+                    if (input.value.trim()) {
+                        directions.push({
+                            title: input.value.trim(),
+                            description: descs[i] ? descs[i].value.trim() : ''
+                        });
+                    }
+                });
+                return directions;
+            };
+            
+            // 行動特性を収集（カンマ区切り→配列）
+            const getBehaviorTraits = function() {
+                const value = document.getElementById('edit_behaviorTraits').value;
+                return value.split(/[,、，]/).map(t => t.trim()).filter(t => t.length > 0);
+            };
+            
+            return {
+                candidateName: document.getElementById('edit_candidateName').value,
+                date: document.getElementById('edit_date').value,
+                consultantName: document.getElementById('edit_consultantName').value || appConfig.consultantName,
+                companyName: document.getElementById('edit_companyName').value || appConfig.companyName,
+                whyNow: getListValues('whyNow'),
+                strengths: getListValues('strengths'),
+                careerAxis: getListValues('careerAxis'),
+                currentWork: {
+                    description: getListValues('workDesc'),
+                    achievements: getListValues('workAchieve')
+                },
+                workStyle: {
+                    remote: document.getElementById('edit_workStyle_remote').value,
+                    management: document.getElementById('edit_workStyle_management').value,
+                    team: document.getElementById('edit_workStyle_team').value
+                },
+                vision: {
+                    oneYear: document.getElementById('edit_vision_oneYear').value,
+                    threeYears: document.getElementById('edit_vision_threeYears').value,
+                    fiveYears: {
+                        salary: document.getElementById('edit_vision_fiveYears_salary').value
+                    }
+                },
+                challenges: getChallenges(),
+                behaviorTraits: getBehaviorTraits(),
+                careerDirections: getCareerDirections()
+            };
+        }
+
+        // プレビュー生成
+        function generatePreview() {
+            const data = collectFormData();
+            showLoading('レポートを生成中...');
+            
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    hideLoading();
+                    if (result.success) {
+                        reportHTML = result.html;
+                        const frame = document.getElementById('previewFrame');
+                        const doc = frame.contentDocument || frame.contentWindow.document;
+                        doc.open();
+                        doc.write(result.html);
+                        doc.close();
+                        goToStep(3);
+                        showMsg('success', 'レポートが生成されました！');
+                    } else {
+                        showMsg('error', 'エラー: ' + result.error);
+                    }
+                })
+                .withFailureHandler(function(err) {
+                    hideLoading();
+                    showMsg('error', 'エラー: ' + err.message);
+                })
+                .generateReportFromData(data);
+        }
+
+        // PDF保存（印刷ウィンドウ）
+        function openPrintWindow() {
+            if (!reportHTML) {
+                showMsg('error', 'レポートが生成されていません');
+                return;
+            }
+            
+            // reportHTMLは完全なHTMLドキュメント（スタイル含む）なので、
+            // </body>の前に印刷スクリプトを挿入する
+            const printHTML = reportHTML.replace('</body>', 
+                `<script>window.onload=function(){setTimeout(function(){window.print();},300);};<\/script></body>`
+            );
+            
+            const w = window.open('', '_blank', 'width=900,height=700');
+            if (w) {
+                w.document.write(printHTML);
+                w.document.close();
+            } else {
+                showMsg('error', 'ポップアップがブロックされました。許可してください。');
+            }
+        }
+
+        // ステップ移動
+        function goToStep(n) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + n).classList.add('active');
+            
+            document.querySelectorAll('.step-badge').forEach((b, i) => {
+                b.classList.remove('active', 'done');
+                if (i + 1 < n) b.classList.add('done');
+                if (i + 1 === n) b.classList.add('active');
+            });
+            hideMsg();
+        }
+
+        // リセット
+        function resetAll() {
+            document.getElementById('transcript').value = '';
+            currentData = null;
+            reportHTML = '';
+            goToStep(1);
+        }
+
+        // ユーティリティ
+        function showLoading(text) {
+            document.getElementById('loadingText').textContent = text;
+            document.getElementById('loading').classList.add('active');
+        }
+        function hideLoading() {
+            document.getElementById('loading').classList.remove('active');
+        }
+        function showMsg(type, msg) {
+            hideMsg();
+            const el = document.getElementById(type);
+            el.textContent = msg;
+            el.classList.add('active');
+        }
+        function hideMsg() {
+            document.getElementById('error').classList.remove('active');
+            document.getElementById('success').classList.remove('active');
+        }
+    </script>
+</body>
+</html>

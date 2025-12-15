@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity 勉強会 - AI Coding Assistant</title>
+    <meta name="description" content="非エンジニア必見！Antigravity勉強会資料。AIコーディングアシスタントの活用法。">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <nav class="nav container">
+            <a href="#" class="logo">Antigravity.</a>
+            <div class="nav-links">
+                <a href="#why">Why?</a>
+                <a href="#basics">Basics</a>
+                <a href="#features">Features</a>
+                <a href="#hands-on">Hands-on</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero container">
+            <div class="hero-content fade-in-up">
+                <span class="badge">非エンジニア必見</span>
+                <h1>AI Coding Assistant<br>Antigravity<br>勉強会</h1>
+                <p class="hero-description">
+                    Antigravityは、非エンジニアでも直感的に操作できるように設計されたAIコーディングアシスタントです。<br>
+                    本資料では、Antigravityの基本的な使い方から実践的な機能まで、段階的に学んでいきます。
+                </p>
+                <div class="hero-actions">
+                    <a href="#why" class="btn btn-primary">はじめる</a>
+                    <a href="https://chromewebstore.google.com/detail/antigravity-browser-exten/eeijfnjmjelapkebgockoeaadonbchdd"
+                        target="_blank" class="btn btn-secondary">拡張機能をDL <i data-lucide="external-link"></i></a>
+                </div>
+            </div>
+            <div class="hero-image fade-in-up delay-200">
+                <img src="images/ui_layout.png" alt="Antigravity UI Layout">
+            </div>
+        </section>
+
+        <!-- Why Antigravity? Section -->
+        <section id="why" class="why-section container">
+            <div class="section-header fade-in">
+                <h2>Why Antigravity?</h2>
+                <p class="section-subtitle">なぜ今、これを激推しするのか</p>
+            </div>
+            
+            <!-- 図解画像を追加 -->
+            <div class="diagram-container fade-in" style="margin: var(--spacing-lg) auto; max-width: 900px;">
+                <img src="images/Gemini_Generated_Image_eh2xhleh2xhleh2x.png" alt="LLMの鍵はコンテキスト" style="width: 100%; border-radius: var(--radius-lg); box-shadow: 0 20px 60px rgba(59, 130, 246, 0.2); margin-bottom: var(--spacing-lg);">
+                <img src="images/Gemini_Generated_Image_78q3f278q3f278q3.png" alt="エージェントと対話型の違い" style="width: 100%; border-radius: var(--radius-lg); box-shadow: 0 20px 60px rgba(59, 130, 246, 0.2);">
+            </div>
+
+            <div class="concept-grid">
+                <div class="concept-item fade-in-right reverse-layout">
+                    <div class="concept-text">
+                        <h3>相談相手ではなく、<br>「実行部隊」として。</h3>
+                        <p>
+                            ChatGPTやGeminiとの対話は「相談」です。しかし、Antigravityは違います。<br>
+                            それは「実行部隊」です。
+                        </p>
+                        <p>
+                            コードを読み、計画を立て、修正し、テストする。<br>
+                            この実行力こそが、私たちがAntigravityを選ぶ理由です。
+                        </p>
+                    </div>
+                    <div class="concept-image">
+                        <img src="images/agent.png" alt="Agent Execution Metaphor">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Basic Operations Section -->
+        <section id="basics" class="basics-section container">
+            <div class="section-header fade-in">
+                <h2>Basic Operations</h2>
+                <p class="section-subtitle">シンプルで強力な画面構成と操作</p>
+            </div>
+
+            <div class="concept-grid">
+                <div class="concept-item fade-in-left">
+                    <div class="concept-image">
+                        <img src="images/ui_layout.png" alt="UI Layout Illustration">
+                    </div>
+                    <div class="concept-text">
+                        <h3>3つのエリアを使いこなす</h3>
+                        <ul class="feature-list">
+                            <li><strong>📁 左：ファイルエリア & メモ</strong><br>ここに情報を溜めることがコンテキストエンジニアリングの要。</li>
+                            <li><strong>📝 中：エディタ</strong><br>コードやドキュメントを閲覧・編集する場所。</li>
+                            <li><strong>🤖 右：エージェントチャット</strong><br>指示を出し、実行させる司令塔エリア。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="concept-item fade-in-right reverse-layout">
+                    <div class="concept-image">
+                        <img src="images/context_stack.png" alt="Context Engineering Concept">
+                    </div>
+                    <div class="concept-text">
+                        <h3>情報を溜めて、参照させる</h3>
+                        <p>
+                            エージェントチャットでは以下の操作が可能です：
+                        </p>
+                        <ul class="feature-list">
+                            <li><code>@</code> <strong>ファイルメンション</strong>: ドラッグ&ドロップでもOK。</li>
+                            <li><code>/</code> <strong>コマンド</strong>: Workflowsなどの機能を呼び出し。</li>
+                            <li>🖼️ <strong>画像入力</strong>: スクショなどもそのまま貼れる。</li>
+                        </ul>
+                        <p class="highlight-box">
+                            💡 左側にメモを積み上げ、右側でそれを参照させながら指示を出す。<br>
+                            これが<strong>コンテキストエンジニアリング</strong>の基本です。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Setup Section -->
+        <section class="setup-section bg-light">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <h2>Quick Setup</h2>
+                    <p class="section-subtitle">まずはここから始めましょう</p>
+                </div>
+
+                <div class="setup-steps">
+                    <div class="step-card fade-in-up">
+                        <div class="step-number">01</div>
+                        <h3>Extension</h3>
+                        <p>Chrome拡張機能をインストールします。</p>
+                        <a href="#" class="text-link">Store Link -></a>
+                    </div>
+                    <div class="step-card fade-in-up delay-100">
+                        <div class="step-number">02</div>
+                        <h3>Japanese & Config</h3>
+                        <p>拡張機能「japanese」を導入し、右上のメニューからGlobal/Project設定でAIの反応を日本語化。</p>
+                    </div>
+                    <div class="step-card fade-in-up delay-200">
+                        <div class="step-number">03</div>
+                        <h3>Basic Settings</h3>
+                        <p>
+                            1. Review Policy (自動実行度合い)<br>
+                            2. Terminal Command (安全設定)<br>
+                            3. Browser Tools (ONにする)
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features-section container">
+            <div class="section-header fade-in">
+                <h2>Powerful Features</h2>
+                <p class="section-subtitle">非エンジニアでも使いこなせる機能群</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <i data-lucide="settings"></i>
+                    </div>
+                    <h3>Rule Settings</h3>
+                    <p>Global（全PJ共通）とWorkspace（PJ固有）の2種類のルールを設定可能。AIの振る舞いを細かく制御。</p>
+                </div>
+
+                <div class="feature-card fade-in-up delay-100">
+                    <div class="feature-icon">
+                        <i data-lucide="file-text"></i>
+                    </div>
+                    <h3>Planning Mode</h3>
+                    <p>AIが勝手に「Implementation Plan」を作成。Wordのようにコメントを入れるだけでフィードバック完了。</p>
+                </div>
+
+                <div class="feature-card fade-in-up delay-100">
+                    <div class="feature-icon">
+                        <i data-lucide="video"></i>
+                    </div>
+                    <h3>Walkthrough</h3>
+                    <p>AIによる作業報告書。実行したタスクをスクショや録画で確認。コメントだけで再実行依頼が可能。</p>
+                </div>
+
+                <div class="feature-card fade-in-up delay-200">
+                    <div class="feature-icon">
+                        <i data-lucide="pen-tool"></i>
+                    </div>
+                    <h3>Screenshot FB</h3>
+                    <p>Webサイトのスクショに直接書き込み。非エンジニアでも的確なUI修正指示が出せます。</p>
+                </div>
+
+                <div class="feature-card fade-in-up delay-300">
+                    <div class="feature-icon">
+                        <i data-lucide="image"></i>
+                    </div>
+                    <h3>Nano Banana</h3>
+                    <p>「UIイメージを提案して」と言うだけ。デザイナーのように画像を生成し、提案してくれます。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hands-on Section -->
+        <section id="hands-on" class="hands-on-section bg-dark text-white">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <h2 class="text-white">Let's Try</h2>
+                    <p class="section-subtitle text-gray">実際に触ってみましょう</p>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item fade-in-left">
+                        <div class="timeline-content">
+                            <h3>Hands-on 1</h3>
+                            <p>適当に指示してツールやLPを作らせてみる</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item fade-in-right">
+                        <div class="timeline-content">
+                            <h3>Hands-on 2</h3>
+                            <p>記事を書いてみる（コンテンツ生成体験）</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item fade-in-left">
+                        <div class="timeline-content">
+                            <h3>Hands-on 3</h3>
+                            <p>要望から上位ドキュメントを生成してコーディング</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">Antigravity.</div>
+                <div class="footer-links">
+                    <p>関連リンク:</p>
+                    <a href="https://chromewebstore.google.com/detail/antigravity-browser-exten/eeijfnjmjelapkebgockoeaadonbchdd?pli=1"
+                        target="_blank">Chrome Extension</a>
+                    <a href="https://x.com/AI_LowCode/status/1994015094699663499?s=20" target="_blank">Screenshot
+                        Demo</a>
+                    <a href="https://x.com/AI_LowCode/status/1993290320071868523?s=20" target="_blank">Walkthrough
+                        Demo</a>
+                </div>
+            </div>
+            <p class="copyright">&copy; 2025 Antigravity Study Session. Updated: 2025-12-09</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="scripts.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>診断結果 | キャリアタイプ12診断</title>
+  <meta name="description" content="あなたのキャリアタイプ診断結果です。">
+  <link rel="stylesheet" href="styles.css">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="page">
+    <!-- Header -->
+    <header class="page-header">
+      <div class="container">
+        <h1>診断結果</h1>
+        <p>あなたのキャリアタイプが判明しました</p>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="page-content">
+      <div class="container">
+        <!-- Result Header -->
+        <div class="result-header fade-in">
+          <h2>あなたのキャリアタイプは</h2>
+        </div>
+
+        <!-- Tie Notice (shown when multiple types have same score) -->
+        <div class="type-tie-notice hidden" id="tieNotice">
+          同率1位のタイプが複数あります。タブをクリックして詳細を確認できます。
+        </div>
+
+        <!-- Type Tabs (for ties) -->
+        <div class="type-tabs hidden" id="typeTabs">
+          <!-- Tabs will be rendered here -->
+        </div>
+
+        <!-- Main Type Card -->
+        <div class="main-type-card fade-in" id="mainTypeCard">
+          <span class="type-group" id="typeGroup">A群：開拓・牽引</span>
+          <h1 class="type-name" id="typeName">ザ・パイオニア</h1>
+          <p class="type-name-alt" id="typeNameAlt">開拓者</p>
+          <p class="type-description" id="typeDescription">
+            行動力がMAX。細かい管理は苦手だが、道を切り開くパワーが突出。
+          </p>
+        </div>
+
+        <!-- Radar Chart Section -->
+        <div class="chart-section">
+          <div class="chart-container">
+            <h3 class="text-center mb-lg">能力パラメータ</h3>
+            <div class="chart-wrapper">
+              <canvas id="radarChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Type Details -->
+        <div class="type-details fade-in" id="typeDetails">
+          <!-- Chart Shape -->
+          <div class="detail-section">
+            <h3>チャートの形状特徴</h3>
+            <p id="chartShape">突破力特化型</p>
+          </div>
+
+          <!-- Company Size -->
+          <div class="detail-section">
+            <h3>相性の良い企業規模</h3>
+            <p id="companySize">スタートアップ（創業期）</p>
+          </div>
+
+          <!-- Keywords -->
+          <div class="detail-section">
+            <h3>適した環境・キーワード</h3>
+            <div class="keywords-grid" id="keywords">
+              <!-- Keywords will be rendered here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Score Breakdown -->
+        <div class="type-details">
+          <div class="detail-section">
+            <h3>タイプ別スコア一覧</h3>
+            <div class="score-breakdown" id="scoreBreakdown">
+              <!-- Scores will be rendered here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="result-actions mt-xl">
+          <button type="button" class="btn btn-primary btn-lg" id="retryBtn">
+            もう一度診断する
+          </button>
+          <a href="index.html" class="btn btn-secondary btn-lg">
+            トップに戻る
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+      <div class="container">
+        <p class="text-muted" id="completedAt">診断完了日時: --</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="types.js"></script>
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // ========================================
+    // Result Page Logic
+    // ========================================
+
+    // State
+    let mainTypes = [];
+    let selectedTypeId = null;
+    let radarChart = null;
+    let typeScores = {};
+
+    // DOM Elements
+    const tieNotice = document.getElementById('tieNotice');
+    const typeTabs = document.getElementById('typeTabs');
+    const mainTypeCard = document.getElementById('mainTypeCard');
+    const typeGroup = document.getElementById('typeGroup');
+    const typeName = document.getElementById('typeName');
+    const typeNameAlt = document.getElementById('typeNameAlt');
+    const typeDescription = document.getElementById('typeDescription');
+    const chartShape = document.getElementById('chartShape');
+    const companySize = document.getElementById('companySize');
+    const keywords = document.getElementById('keywords');
+    const scoreBreakdown = document.getElementById('scoreBreakdown');
+    const completedAt = document.getElementById('completedAt');
+    const retryBtn = document.getElementById('retryBtn');
+
+    // Initialize
+    function init() {
+      // Check if completed
+      if (!storage.isCompleted()) {
+        // Redirect to questions if not completed
+        navigation.goToQuestions();
+        return;
+      }
+
+      // Load answers and calculate scores
+      const answers = storage.getAnswers();
+      typeScores = scoring.calculateTypeScores(answers);
+      mainTypes = scoring.getMainTypes(typeScores);
+
+      if (mainTypes.length === 0) {
+        navigation.goToIndex();
+        return;
+      }
+
+      // Show tie notice if multiple types
+      if (mainTypes.length > 1) {
+        tieNotice.classList.remove('hidden');
+        typeTabs.classList.remove('hidden');
+        renderTypeTabs();
+      }
+
+      // Select first main type
+      selectedTypeId = mainTypes[0].id;
+      renderSelectedType();
+      renderRadarChart();
+      renderScoreBreakdown();
+      renderCompletedAt();
+    }
+
+    // Render type tabs for tie situations
+    function renderTypeTabs() {
+      typeTabs.innerHTML = mainTypes.map(type => `
+        <button 
+          type="button" 
+          class="type-tab ${type.id === selectedTypeId ? 'active' : ''}"
+          data-type-id="${type.id}"
+        >
+          ${type.name}
+        </button>
+      `).join('');
+
+      // Add event listeners
+      typeTabs.querySelectorAll('.type-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          selectedTypeId = tab.dataset.typeId;
+          updateTabsActive();
+          renderSelectedType();
+          updateRadarChart();
+        });
+      });
+    }
+
+    // Update active tab state
+    function updateTabsActive() {
+      typeTabs.querySelectorAll('.type-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.typeId === selectedTypeId);
+      });
+    }
+
+    // Render selected type details
+    function renderSelectedType() {
+      const type = getTypeById(selectedTypeId);
+      if (!type) return;
+
+      const group = GROUPS[type.group];
+
+      // Update main card
+      typeGroup.textContent = `${type.group}群：${group.name}`;
+      typeGroup.style.background = getGroupColor(type.group);
+      typeName.textContent = type.name;
+      typeNameAlt.textContent = type.nameAlt;
+      typeDescription.textContent = type.description;
+
+      // Update details
+      chartShape.textContent = type.chartShape;
+      companySize.textContent = type.companySize;
+
+      // Render keywords
+      keywords.innerHTML = type.keywords.map(kw => `
+        <span class="keyword-tag">${kw}</span>
+      `).join('');
+    }
+
+    // Render radar chart
+    function renderRadarChart() {
+      const type = getTypeById(selectedTypeId);
+      if (!type) return;
+
+      const ctx = document.getElementById('radarChart').getContext('2d');
+
+      // Chart.js radar chart configuration
+      radarChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: RADAR_LABELS.map(l => l.label),
+          datasets: [{
+            label: type.name,
+            data: type.radarScores,
+            backgroundColor: 'rgba(201, 162, 39, 0.2)',
+            borderColor: 'rgba(201, 162, 39, 1)',
+            borderWidth: 2,
+            pointBackgroundColor: 'rgba(201, 162, 39, 1)',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 5
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          scales: {
+            r: {
+              beginAtZero: true,
+              min: 0,
+              max: 5,
+              ticks: {
+                stepSize: 1,
+                display: true,
+                backdropColor: 'transparent',
+                font: {
+                  size: 10
+                }
+              },
+              pointLabels: {
+                font: {
+                  size: 12,
+                  weight: '500'
+                },
+                color: '#2c3e50'
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.1)'
+              },
+              angleLines: {
+                color: 'rgba(0, 0, 0, 0.1)'
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }
+      });
+    }
+
+    // Update radar chart when type changes
+    function updateRadarChart() {
+      const type = getTypeById(selectedTypeId);
+      if (!type || !radarChart) return;
+
+      radarChart.data.datasets[0].label = type.name;
+      radarChart.data.datasets[0].data = type.radarScores;
+      radarChart.update();
+    }
+
+    // Render score breakdown
+    function renderScoreBreakdown() {
+      const sortedScores = scoring.getSortedScores(typeScores);
+      const maxScore = 9; // 3 questions × 3 points max
+
+      scoreBreakdown.innerHTML = sortedScores.map(({ type, score }) => {
+        const isMainType = mainTypes.some(t => t.id === type.id);
+        return `
+          <div class="score-item">
+            <span class="score-type" style="${isMainType ? 'font-weight: 700; color: var(--color-accent);' : ''}">
+              ${type.name}（${type.nameAlt}）
+            </span>
+            <span class="score-value" style="${isMainType ? 'color: var(--color-accent);' : ''}">
+              ${score} / ${maxScore}
+            </span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Render completed at timestamp
+    function renderCompletedAt() {
+      const date = storage.getCompletedAt();
+      if (date) {
+        completedAt.textContent = `診断完了日時: ${formatDate(date)}`;
+      }
+    }
+
+    // Retry diagnosis
+    function handleRetry() {
+      storage.clear();
+      navigation.goToQuestions();
+    }
+
+    // Event Listeners
+    retryBtn.addEventListener('click', handleRetry);
+
+    // Initialize on page load
+    init();
+  </script>
+</body>
+</html>
