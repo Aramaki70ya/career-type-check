@@ -142,14 +142,9 @@ function formatDate(date) {
 }
 
 /**
- * 群（グループ）の色を取得
+ * 群（グループ）の色を取得 - ミニマルデザイン用
  */
 function getGroupColor(groupId) {
-  const colors = {
-    A: 'var(--color-group-a)',
-    B: 'var(--color-group-b)',
-    C: 'var(--color-group-c)',
-    D: 'var(--color-group-d)'
-  };
-  return colors[groupId] || 'var(--color-primary)';
+  // ミニマルデザインでは統一色を使用
+  return 'transparent';
 }

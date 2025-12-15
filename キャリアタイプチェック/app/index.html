@@ -7,56 +7,51 @@
   <meta name="description" content="36問の質問に答えて、12のキャリアタイプからあなたに最も合ったタイプを診断します。転職活動やキャリア設計に役立ててください。">
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* Index page specific styles */
-    .index-page {
-      background: linear-gradient(180deg, var(--color-bg) 0%, #e8ecf3 100%);
-    }
-    
-    
     .info-section {
-      background: var(--color-bg-card);
-      border-radius: var(--radius-xl);
-      padding: var(--spacing-2xl);
-      margin-top: var(--spacing-3xl);
-      box-shadow: var(--shadow-md);
+      margin-top: var(--spacing-2xl);
+      padding-top: var(--spacing-xl);
+      border-top: 1px solid var(--color-border);
     }
     
     .info-section h2 {
       text-align: center;
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      letter-spacing: 0.05em;
       margin-bottom: var(--spacing-xl);
     }
     
     .info-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: var(--spacing-lg);
+      display: flex;
+      justify-content: center;
+      gap: var(--spacing-2xl);
+      flex-wrap: wrap;
     }
     
     .info-item {
       text-align: center;
-      padding: var(--spacing-lg);
     }
     
     .info-number {
-      font-size: var(--font-size-4xl);
-      font-weight: 700;
-      color: var(--color-accent);
-      margin-bottom: var(--spacing-sm);
+      font-size: var(--font-size-2xl);
+      font-weight: 400;
+      color: var(--color-text);
+      margin-bottom: var(--spacing-xs);
     }
     
     .info-label {
-      font-size: var(--font-size-sm);
-      color: var(--color-text-light);
+      font-size: var(--font-size-xs);
+      color: var(--color-text-muted);
     }
   </style>
 </head>
-<body class="index-page">
+<body>
   <div class="page">
     <!-- Header -->
     <header class="page-header">
       <div class="container">
         <h1>キャリアタイプ12診断</h1>
-        <p>あなたの強み・価値観を可視化します</p>
+        <p>あなたの強み・価値観を可視化</p>
       </div>
     </header>
 
@@ -65,11 +60,9 @@
       <div class="container">
         <!-- Hero Section -->
         <section class="hero-section fade-in">
-          <h2 class="hero-title">自分に合ったキャリアを<br>見つけよう</h2>
+          <h2 class="hero-title">自分に合ったキャリアを見つける</h2>
           <p class="hero-subtitle">
-            36問の質問に答えるだけで、12のキャリアタイプから<br>
-            あなたに最も合ったタイプを診断します。<br>
-            所要時間は約5〜10分です。
+            36問の質問に答えるだけで、12のキャリアタイプからあなたに最も合ったタイプを診断します。所要時間は約5〜10分です。
           </p>
           
           <!-- Resume Notice -->
@@ -79,7 +72,7 @@
           </div>
           
           <!-- Completed Notice -->
-          <div class="resume-notice hidden" id="completedNotice" style="border-color: var(--color-primary); color: var(--color-primary);">
+          <div class="resume-notice hidden" id="completedNotice">
             <strong>診断が完了しています</strong>
             <span id="completedInfo">結果を確認するか、新しく診断を始めてください</span>
           </div>
@@ -93,21 +86,18 @@
         <!-- Features Section -->
         <section class="feature-grid">
           <div class="feature-card fade-in">
-            <div class="feature-icon">📊</div>
             <h3 class="feature-title">5軸レーダーチャート</h3>
             <p class="feature-description">
               行動力・対人力・論理力・創造力・規律力の5つの軸であなたの特性を可視化します。
             </p>
           </div>
           <div class="feature-card fade-in">
-            <div class="feature-icon">🎯</div>
             <h3 class="feature-title">12タイプ診断</h3>
             <p class="feature-description">
               パイオニア、クリエイターなど12のキャリアタイプからあなたに最適なタイプを特定します。
             </p>
           </div>
           <div class="feature-card fade-in">
-            <div class="feature-icon">💼</div>
             <h3 class="feature-title">適職キーワード</h3>
             <p class="feature-description">
               あなたに合った企業規模や環境、職種のキーワードを具体的に提示します。
@@ -117,7 +107,7 @@
 
         <!-- Info Section -->
         <section class="info-section fade-in">
-          <h2>診断について</h2>
+          <h2>診断概要</h2>
           <div class="info-grid">
             <div class="info-item">
               <div class="info-number">36</div>
@@ -125,7 +115,7 @@
             </div>
             <div class="info-item">
               <div class="info-number">12</div>
-              <div class="info-label">キャリアタイプ</div>
+              <div class="info-label">タイプ</div>
             </div>
             <div class="info-item">
               <div class="info-number">5</div>
@@ -133,7 +123,7 @@
             </div>
             <div class="info-item">
               <div class="info-number">5-10</div>
-              <div class="info-label">所要時間（分）</div>
+              <div class="info-label">分</div>
             </div>
           </div>
         </section>
@@ -233,4 +223,3 @@
   </script>
 </body>
 </html>
-

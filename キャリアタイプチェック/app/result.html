@@ -15,7 +15,7 @@
     <header class="page-header">
       <div class="container">
         <h1>診断結果</h1>
-        <p>あなたのキャリアタイプが判明しました</p>
+        <p>あなたのキャリアタイプ</p>
       </div>
     </header>
 
@@ -24,12 +24,12 @@
       <div class="container">
         <!-- Result Header -->
         <div class="result-header fade-in">
-          <h2>あなたのキャリアタイプは</h2>
+          <h2>YOUR TYPE</h2>
         </div>
 
         <!-- Tie Notice (shown when multiple types have same score) -->
         <div class="type-tie-notice hidden" id="tieNotice">
-          同率1位のタイプが複数あります。タブをクリックして詳細を確認できます。
+          同率1位のタイプが複数あります
         </div>
 
         <!-- Type Tabs (for ties) -->
@@ -50,7 +50,7 @@
         <!-- Radar Chart Section -->
         <div class="chart-section">
           <div class="chart-container">
-            <h3 class="text-center mb-lg">能力パラメータ</h3>
+            <h3 class="text-center mb-lg" style="font-size: var(--font-size-sm); color: var(--color-text-secondary); letter-spacing: 0.05em;">能力パラメータ</h3>
             <div class="chart-wrapper">
               <canvas id="radarChart"></canvas>
             </div>
@@ -61,7 +61,7 @@
         <div class="type-details fade-in" id="typeDetails">
           <!-- Chart Shape -->
           <div class="detail-section">
-            <h3>チャートの形状特徴</h3>
+            <h3>形状特徴</h3>
             <p id="chartShape">突破力特化型</p>
           </div>
 
@@ -83,7 +83,7 @@
         <!-- Score Breakdown -->
         <div class="type-details">
           <div class="detail-section">
-            <h3>タイプ別スコア一覧</h3>
+            <h3>タイプ別スコア</h3>
             <div class="score-breakdown" id="scoreBreakdown">
               <!-- Scores will be rendered here -->
             </div>
@@ -213,7 +213,6 @@
 
       // Update main card
       typeGroup.textContent = `${type.group}群：${group.name}`;
-      typeGroup.style.background = getGroupColor(type.group);
       typeName.textContent = type.name;
       typeNameAlt.textContent = type.nameAlt;
       typeDescription.textContent = type.description;
@@ -228,14 +227,14 @@
       `).join('');
     }
 
-    // Render radar chart
+    // Render radar chart - Minimal color scheme
     function renderRadarChart() {
       const type = getTypeById(selectedTypeId);
       if (!type) return;
 
       const ctx = document.getElementById('radarChart').getContext('2d');
 
-      // Chart.js radar chart configuration
+      // Chart.js radar chart configuration - Minimal gray theme
       radarChart = new Chart(ctx, {
         type: 'radar',
         data: {
@@ -243,13 +242,13 @@
           datasets: [{
             label: type.name,
             data: type.radarScores,
-            backgroundColor: 'rgba(201, 162, 39, 0.2)',
-            borderColor: 'rgba(201, 162, 39, 1)',
-            borderWidth: 2,
-            pointBackgroundColor: 'rgba(201, 162, 39, 1)',
+            backgroundColor: 'rgba(26, 26, 26, 0.08)',
+            borderColor: 'rgba(26, 26, 26, 0.8)',
+            borderWidth: 1.5,
+            pointBackgroundColor: 'rgba(26, 26, 26, 1)',
             pointBorderColor: '#fff',
-            pointBorderWidth: 2,
-            pointRadius: 5
+            pointBorderWidth: 1,
+            pointRadius: 4
           }]
         },
         options: {
@@ -264,22 +263,23 @@
                 stepSize: 1,
                 display: true,
                 backdropColor: 'transparent',
+                color: '#9CA3AF',
                 font: {
                   size: 10
                 }
               },
               pointLabels: {
                 font: {
-                  size: 12,
-                  weight: '500'
+                  size: 11,
+                  weight: '400'
                 },
-                color: '#2c3e50'
+                color: '#1A1A1A'
               },
               grid: {
-                color: 'rgba(0, 0, 0, 0.1)'
+                color: 'rgba(0, 0, 0, 0.06)'
               },
               angleLines: {
-                color: 'rgba(0, 0, 0, 0.1)'
+                color: 'rgba(0, 0, 0, 0.06)'
               }
             }
           },
@@ -311,10 +311,10 @@
         const isMainType = mainTypes.some(t => t.id === type.id);
         return `
           <div class="score-item">
-            <span class="score-type" style="${isMainType ? 'font-weight: 700; color: var(--color-accent);' : ''}">
+            <span class="score-type" style="${isMainType ? 'font-weight: 500;' : ''}">
               ${type.name}（${type.nameAlt}）
             </span>
-            <span class="score-value" style="${isMainType ? 'color: var(--color-accent);' : ''}">
+            <span class="score-value" style="${isMainType ? 'color: #1A1A1A;' : ''}">
               ${score} / ${maxScore}
             </span>
           </div>
@@ -326,7 +326,7 @@
     function renderCompletedAt() {
       const date = storage.getCompletedAt();
       if (date) {
-        completedAt.textContent = `診断完了日時: ${formatDate(date)}`;
+        completedAt.textContent = `診断完了: ${formatDate(date)}`;
       }
     }
 

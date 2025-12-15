@@ -1,0 +1,17 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/questions",
+      "destination": "/questions.html"
+    },
+    {
+      "source": "/result",
+      "destination": "/result.html"
+    }
+  ]
+}
+
