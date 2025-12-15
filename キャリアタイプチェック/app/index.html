@@ -8,23 +8,28 @@
   <link rel="stylesheet" href="styles.css">
   <style>
     .info-section {
-      margin-top: var(--spacing-2xl);
-      padding-top: var(--spacing-xl);
-      border-top: 1px solid var(--color-border);
+      margin-top: var(--spacing-3xl);
+      padding: var(--spacing-2xl);
+      background: var(--color-bg-card);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--color-border-light);
     }
     
     .info-section h2 {
       text-align: center;
       font-size: var(--font-size-sm);
-      color: var(--color-text-secondary);
-      letter-spacing: 0.05em;
+      font-weight: 700;
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
       margin-bottom: var(--spacing-xl);
     }
     
     .info-grid {
       display: flex;
       justify-content: center;
-      gap: var(--spacing-2xl);
+      gap: var(--spacing-3xl);
       flex-wrap: wrap;
     }
     
@@ -33,15 +38,19 @@
     }
     
     .info-number {
-      font-size: var(--font-size-2xl);
-      font-weight: 400;
-      color: var(--color-text);
+      font-size: var(--font-size-4xl);
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       margin-bottom: var(--spacing-xs);
     }
     
     .info-label {
-      font-size: var(--font-size-xs);
-      color: var(--color-text-muted);
+      font-size: var(--font-size-sm);
+      color: var(--color-text-light);
+      font-weight: 500;
     }
   </style>
 </head>
@@ -51,7 +60,7 @@
     <header class="page-header">
       <div class="container">
         <h1>キャリアタイプ12診断</h1>
-        <p>あなたの強み・価値観を可視化</p>
+        <p>あなたの強み・価値観を可視化しよう</p>
       </div>
     </header>
 
@@ -60,9 +69,9 @@
       <div class="container">
         <!-- Hero Section -->
         <section class="hero-section fade-in">
-          <h2 class="hero-title">自分に合ったキャリアを見つける</h2>
+          <h2 class="hero-title">自分だけの<span>キャリアタイプ</span>を<br>発見しよう</h2>
           <p class="hero-subtitle">
-            36問の質問に答えるだけで、12のキャリアタイプからあなたに最も合ったタイプを診断します。所要時間は約5〜10分です。
+            36問の質問に答えるだけで、12のキャリアタイプからあなたに最も合ったタイプを診断。所要時間は約5〜10分です。
           </p>
           
           <!-- Resume Notice -->
@@ -86,28 +95,31 @@
         <!-- Features Section -->
         <section class="feature-grid">
           <div class="feature-card fade-in">
+            <div class="feature-icon">📊</div>
             <h3 class="feature-title">5軸レーダーチャート</h3>
             <p class="feature-description">
-              行動力・対人力・論理力・創造力・規律力の5つの軸であなたの特性を可視化します。
+              行動力・対人力・論理力・創造力・規律力の5軸で可視化
             </p>
           </div>
           <div class="feature-card fade-in">
+            <div class="feature-icon">🎯</div>
             <h3 class="feature-title">12タイプ診断</h3>
             <p class="feature-description">
-              パイオニア、クリエイターなど12のキャリアタイプからあなたに最適なタイプを特定します。
+              パイオニア、クリエイターなど12タイプから特定
             </p>
           </div>
           <div class="feature-card fade-in">
+            <div class="feature-icon">💼</div>
             <h3 class="feature-title">適職キーワード</h3>
             <p class="feature-description">
-              あなたに合った企業規模や環境、職種のキーワードを具体的に提示します。
+              あなたに合った環境や職種を具体的に提示
             </p>
           </div>
         </section>
 
         <!-- Info Section -->
         <section class="info-section fade-in">
-          <h2>診断概要</h2>
+          <h2>診断について</h2>
           <div class="info-grid">
             <div class="info-item">
               <div class="info-number">36</div>
@@ -197,7 +209,7 @@
       } else {
         // Fresh start
         heroActions.innerHTML = `
-          <a href="questions.html" class="btn btn-primary btn-lg">診断を始める</a>
+          <a href="questions.html" class="btn btn-primary btn-lg">無料で診断を始める</a>
         `;
       }
     }
