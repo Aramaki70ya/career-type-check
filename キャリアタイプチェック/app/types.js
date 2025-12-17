@@ -229,18 +229,18 @@ function getTypesByGroup(groupId) {
 // タイプIDから動物画像のパスを取得
 function getTypeAnimalImagePath(typeId) {
   const imageMap = {
-    'pioneer': '../characters/image/pioneer.png',
-    'driver': '../characters/image/driver.png',
-    'influencer': '../characters/image/influencer.png',
-    'connector': '../characters/image/connector.png',
-    'supporter': '../characters/image/supporter.png',
-    'educator': '../characters/image/educator.png',
-    'visionary': '../characters/image/visionary.png',
-    'creator': '../characters/image/creator.png',
-    'hacker': '../characters/image/hacker.png',
-    'specialist': '../characters/image/specialist.png',
-    'guardian': '../characters/image/guardian.png',
-    'architect': '../characters/image/architect.png'
+    'pioneer': 'images/pioneer.png',
+    'driver': 'images/driver.png',
+    'influencer': 'images/influencer.png',
+    'connector': 'images/connector.png',
+    'supporter': 'images/supporter.png',
+    'educator': 'images/educator.png',
+    'visionary': 'images/visionary.png',
+    'creator': 'images/creator.png',
+    'hacker': 'images/hacker.png',
+    'specialist': 'images/specialist.png',
+    'guardian': 'images/guardian.png',
+    'architect': 'images/architect.png'
   };
   return imageMap[typeId] || null;
 }
