@@ -38,9 +38,12 @@
         </div>
 
         <!-- Main Type Card -->
-        <div class="main-type-card fade-in" id="mainTypeCard">
-          <span class="type-group" id="typeGroup">GROUP A</span>
-          <h1 class="type-name" id="typeName">The Pioneer</h1>
+        <div class="main-type-card fade-in" id="mainTypeCard" style="display: block;">
+          <div class="type-animal-image-container">
+            <img id="typeAnimalImage" src="" alt="" class="type-animal-image">
+          </div>
+          <span class="type-group" id="typeGroup">Group A — 開拓・牽引</span>
+          <h1 class="type-name" id="typeName">ザ・パイオニア</h1>
           <p class="type-name-alt" id="typeNameAlt">開拓者</p>
           <p class="type-description" id="typeDescription">
             行動力がMAX。細かい管理は苦手だが、道を切り開くパワーが突出。
@@ -133,6 +136,7 @@
     const typeName = document.getElementById('typeName');
     const typeNameAlt = document.getElementById('typeNameAlt');
     const typeDescription = document.getElementById('typeDescription');
+    const typeAnimalImage = document.getElementById('typeAnimalImage');
     const chartShape = document.getElementById('chartShape');
     const companySize = document.getElementById('companySize');
     const keywords = document.getElementById('keywords');
@@ -217,6 +221,13 @@
       typeNameAlt.textContent = type.nameAlt;
       typeDescription.textContent = type.description;
 
+      // Update animal image
+      const imagePath = getTypeAnimalImagePath(type.id);
+      if (imagePath && typeAnimalImage) {
+        typeAnimalImage.src = imagePath;
+        typeAnimalImage.alt = `${type.nameAlt}のモチーフ動物`;
+      }
+
       // Update details
       chartShape.textContent = type.chartShape;
       companySize.textContent = type.companySize;
@@ -227,20 +238,20 @@
       `).join('');
     }
 
-    // Render radar chart - 2025 Gradient Purple Theme
+    // Render radar chart - 絵本風ライトテーマ
     function renderRadarChart() {
       const type = getTypeById(selectedTypeId);
       if (!type) return;
 
       const ctx = document.getElementById('radarChart').getContext('2d');
       
-      // Create gradient for the chart
+      // Create gradient for the chart - キャラクターのテーマカラーを使用
       const gradient = ctx.createLinearGradient(0, 0, 300, 300);
-      gradient.addColorStop(0, 'rgba(99, 102, 241, 0.3)');
-      gradient.addColorStop(0.5, 'rgba(168, 85, 247, 0.3)');
-      gradient.addColorStop(1, 'rgba(236, 72, 153, 0.3)');
+      gradient.addColorStop(0, 'rgba(255, 107, 53, 0.25)'); // パイオニア（オレンジレッド）
+      gradient.addColorStop(0.5, 'rgba(255, 105, 180, 0.25)'); // インフルエンサー（ホットピンク）
+      gradient.addColorStop(1, 'rgba(32, 178, 170, 0.25)'); // コネクター（ライトシーグリーン）
 
-      // Chart.js radar chart configuration - Dark theme
+      // Chart.js radar chart configuration - ライトテーマ
       radarChart = new Chart(ctx, {
         type: 'radar',
         data: {
@@ -249,14 +260,14 @@
             label: type.name,
             data: type.radarScores,
             backgroundColor: gradient,
-            borderColor: '#a855f7',
-            borderWidth: 2,
-            pointBackgroundColor: '#a855f7',
+            borderColor: '#FF6B35', // パイオニアのオレンジレッド
+            borderWidth: 3,
+            pointBackgroundColor: '#FF6B35',
             pointBorderColor: '#ffffff',
             pointBorderWidth: 2,
-            pointRadius: 5,
-            pointHoverRadius: 8,
-            pointHoverBackgroundColor: '#ec4899',
+            pointRadius: 6,
+            pointHoverRadius: 9,
+            pointHoverBackgroundColor: '#FF69B4',
             pointHoverBorderColor: '#ffffff'
           }]
         },
@@ -272,25 +283,27 @@
                 stepSize: 1,
                 display: true,
                 backdropColor: 'transparent',
-                color: 'rgba(255, 255, 255, 0.5)',
+                color: '#5a6c7d', // はっきり見えるダークグレー
                 font: {
-                  size: 10,
+                  size: 11,
                   family: "'SF Mono', monospace"
                 }
               },
               pointLabels: {
                 font: {
-                  size: 11,
+                  size: 13,
                   weight: '600',
-                  family: "'SF Pro Display', sans-serif"
+                  family: "'Hiragino Kaku Gothic ProN', sans-serif"
                 },
-                color: 'rgba(255, 255, 255, 0.9)'
+                color: '#2c3e50' // しっかり見えるダークテキスト
               },
               grid: {
-                color: 'rgba(255, 255, 255, 0.08)'
+                color: 'rgba(44, 62, 80, 0.25)', // はっきり見えるグリッド
+                lineWidth: 1.5
               },
               angleLines: {
-                color: 'rgba(255, 255, 255, 0.08)'
+                color: 'rgba(44, 62, 80, 0.25)', // はっきり見える角度線
+                lineWidth: 1.5
               }
             }
           },
@@ -299,11 +312,11 @@
               display: false
             },
             tooltip: {
-              backgroundColor: 'rgba(0, 0, 0, 0.8)',
-              titleColor: '#ffffff',
-              bodyColor: '#ffffff',
-              borderColor: 'rgba(168, 85, 247, 0.5)',
-              borderWidth: 1,
+              backgroundColor: 'rgba(255, 255, 255, 0.95)',
+              titleColor: '#2c3e50',
+              bodyColor: '#2c3e50',
+              borderColor: 'rgba(255, 107, 53, 0.5)',
+              borderWidth: 2,
               padding: 12,
               cornerRadius: 8,
               displayColors: false,
@@ -368,7 +381,11 @@
     retryBtn.addEventListener('click', handleRetry);
 
     // Initialize on page load
-    init();
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
   </script>
 </body>
 </html>

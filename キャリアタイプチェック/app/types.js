@@ -225,3 +225,22 @@ function getTypeByNumber(number) {
 function getTypesByGroup(groupId) {
   return TYPES.filter(t => t.group === groupId);
 }
+
+// タイプIDから動物画像のパスを取得
+function getTypeAnimalImagePath(typeId) {
+  const imageMap = {
+    'pioneer': '../characters/image/pioneer.png',
+    'driver': '../characters/image/driver.png',
+    'influencer': '../characters/image/influencer.png',
+    'connector': '../characters/image/connector.png',
+    'supporter': '../characters/image/supporter.png',
+    'educator': '../characters/image/educator.png',
+    'visionary': '../characters/image/visionary.png',
+    'creator': '../characters/image/creator.png',
+    'hacker': '../characters/image/hacker.png',
+    'specialist': '../characters/image/specialist.png',
+    'guardian': '../characters/image/guardian.png',
+    'architect': '../characters/image/architect.png'
+  };
+  return imageMap[typeId] || null;
+}
