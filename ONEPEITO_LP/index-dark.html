@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONEPEITO 望年会 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'zen': ['Zen Kaku Gothic New', 'sans-serif'],
+                        'orbitron': ['Orbitron', 'sans-serif'],
+                    },
+                    colors: {
+                        'kompeito': {
+                            'pink': '#ff6b9d',
+                            'purple': '#c77dff',
+                            'cyan': '#00f5d4',
+                            'orange': '#ffa500',
+                            'yellow': '#ffe66d',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'spin-slow': 'spin 20s linear infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Zen Kaku Gothic New', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* カスタムスクロールバー */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #ff6b9d, #c77dff, #00f5d4);
+            border-radius: 4px;
+        }
+
+        /* グラデーションテキスト */
+        .gradient-text {
+            background: linear-gradient(135deg, #ff6b9d 0%, #c77dff 50%, #00f5d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* フローティングアニメーション */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(255, 107, 157, 0.5)); }
+            to { filter: drop-shadow(0 0 40px rgba(199, 125, 255, 0.8)); }
+        }
+
+        /* 金平糖のパーティクル */
+        .kompeito-particle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .kompeito-particle::before,
+        .kompeito-particle::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            border-radius: 50%;
+        }
+
+        .kompeito-particle::before {
+            transform: rotate(60deg);
+        }
+
+        .kompeito-particle::after {
+            transform: rotate(-60deg);
+        }
+
+        /* スクロールアニメーション */
+        .reveal {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-100px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal-scale.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* グロー効果 */
+        .glow-box {
+            position: relative;
+        }
+
+        .glow-box::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, #ff6b9d, #c77dff, #00f5d4, #ff6b9d);
+            background-size: 400% 400%;
+            border-radius: inherit;
+            z-index: -1;
+            animation: gradient-rotate 4s linear infinite;
+            opacity: 0.7;
+            filter: blur(15px);
+        }
+
+        @keyframes gradient-rotate {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ヒーローセクションの背景 */
+        .hero-bg {
+            background: radial-gradient(ellipse at center, rgba(199, 125, 255, 0.15) 0%, transparent 70%),
+                        radial-gradient(ellipse at 20% 80%, rgba(255, 107, 157, 0.1) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 20%, rgba(0, 245, 212, 0.1) 0%, transparent 50%);
+        }
+
+        /* グリッドパターン */
+        .grid-pattern {
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* プログラムカード */
+        .program-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+        }
+
+        .program-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(199, 125, 255, 0.5);
+            box-shadow: 0 25px 50px -12px rgba(199, 125, 255, 0.25);
+        }
+
+        /* タイムライン */
+        .timeline-line {
+            background: linear-gradient(180deg, #ff6b9d, #c77dff, #00f5d4);
+        }
+
+        .timeline-dot {
+            box-shadow: 0 0 20px currentColor;
+        }
+
+        /* 波形背景 */
+        .wave-bg {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wave-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23c77dff' fill-opacity='0.05' d='M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") no-repeat bottom;
+            background-size: cover;
+            pointer-events: none;
+        }
+
+        /* ナビゲーション */
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ff6b9d, #c77dff);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* カウントダウン数字 */
+        .countdown-number {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* モーフィングシェイプ */
+        .morph-shape {
+            animation: morph 8s ease-in-out infinite;
+        }
+
+        @keyframes morph {
+            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+        }
+
+        /* パララックス */
+        .parallax {
+            will-change: transform;
+        }
+
+        /* ボタンエフェクト */
+        .btn-glow {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-glow::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-glow:hover::before {
+            left: 100%;
+        }
+
+        /* ステージ効果 */
+        .stage-light {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="font-zen">
+    <!-- ナビゲーション -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-transparent">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#hero" class="font-orbitron text-xl md:text-2xl font-bold gradient-text">
+                    ONEPEITO
+                </a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#about" class="nav-link text-gray-300 hover:text-white transition-colors">ABOUT</a>
+                    <a href="#program" class="nav-link text-gray-300 hover:text-white transition-colors">PROGRAM</a>
+                    <a href="#purpose" class="nav-link text-gray-300 hover:text-white transition-colors">PURPOSE</a>
+                    <a href="#details" class="nav-link text-gray-300 hover:text-white transition-colors">DETAILS</a>
+                </div>
+                <button id="menu-btn" class="md:hidden text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- モバイルメニュー -->
+        <div id="mobile-menu" class="hidden md:hidden bg-black/95 backdrop-blur-lg">
+            <div class="px-4 py-4 space-y-4">
+                <a href="#about" class="block text-gray-300 hover:text-white transition-colors">ABOUT</a>
+                <a href="#program" class="block text-gray-300 hover:text-white transition-colors">PROGRAM</a>
+                <a href="#purpose" class="block text-gray-300 hover:text-white transition-colors">PURPOSE</a>
+                <a href="#details" class="block text-gray-300 hover:text-white transition-colors">DETAILS</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ヒーローセクション -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center hero-bg grid-pattern overflow-hidden">
+        <!-- ステージライト効果 -->
+        <div class="stage-light bg-kompeito-pink top-0 left-1/4 animate-pulse-slow"></div>
+        <div class="stage-light bg-kompeito-purple top-1/3 right-1/4 animate-pulse-slow" style="animation-delay: 1s;"></div>
+        <div class="stage-light bg-kompeito-cyan bottom-1/4 left-1/3 animate-pulse-slow" style="animation-delay: 2s;"></div>
+
+        <!-- フローティング金平糖 -->
+        <div id="particles-container" class="absolute inset-0 pointer-events-none"></div>
+
+        <!-- モーフィングシェイプ -->
+        <div class="absolute top-1/4 right-10 w-32 h-32 md:w-64 md:h-64 bg-gradient-to-br from-kompeito-pink/20 to-kompeito-purple/20 morph-shape animate-float"></div>
+        <div class="absolute bottom-1/4 left-10 w-24 h-24 md:w-48 md:h-48 bg-gradient-to-br from-kompeito-cyan/20 to-kompeito-purple/20 morph-shape animate-float" style="animation-delay: -3s;"></div>
+
+        <div class="relative z-10 text-center px-4 max-w-5xl mx-auto">
+            <!-- サブタイトル -->
+            <div class="reveal mb-6 md:mb-8">
+                <span class="inline-block px-4 py-2 md:px-6 md:py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 text-sm md:text-base text-gray-300">
+                    🔥 こんぺい亭0次会
+                </span>
+            </div>
+
+            <!-- メインタイトル -->
+            <h1 class="reveal text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black mb-4 md:mb-6 leading-tight" style="transition-delay: 0.2s;">
+                <span class="block text-white mb-2">きたる2026年を望む</span>
+                <span class="gradient-text font-orbitron tracking-wider">"望年会"</span>
+            </h1>
+
+            <!-- サブタイトル -->
+            <p class="reveal text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-400 mb-8 md:mb-12" style="transition-delay: 0.4s;">
+                〜<span class="text-kompeito-pink">KOMPEITO</span>から<span class="text-kompeito-cyan">ONE</span>PEITOへ〜
+            </p>
+
+            <!-- 日時 -->
+            <div class="reveal flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-8 mb-8 md:mb-12" style="transition-delay: 0.6s;">
+                <div class="countdown-number px-6 py-4 md:px-8 md:py-6 rounded-2xl text-center">
+                    <p class="text-3xl md:text-5xl font-orbitron font-bold gradient-text">12.19</p>
+                    <p class="text-xs md:text-sm text-gray-400 mt-1">THU / 2025</p>
+                </div>
+                <div class="countdown-number px-6 py-4 md:px-8 md:py-6 rounded-2xl text-center">
+                    <p class="text-3xl md:text-5xl font-orbitron font-bold text-white">90<span class="text-lg md:text-2xl text-gray-400">min</span></p>
+                    <p class="text-xs md:text-sm text-gray-400 mt-1">DURATION</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- スクロールインジケーター（ヒーローセクション外に配置） -->
+        <div class="reveal absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce z-20" style="transition-delay: 0.8s;">
+            <a href="#about" class="flex flex-col items-center text-gray-400 hover:text-white transition-colors">
+                <span class="text-xs mb-2">SCROLL</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Aboutセクション -->
+    <section id="about" class="relative min-h-screen flex flex-col justify-center py-16 md:py-20 wave-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 md:mb-20">
+                <h2 class="reveal text-sm md:text-base font-orbitron text-kompeito-cyan mb-4 tracking-widest">ABOUT</h2>
+                <h3 class="reveal text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style="transition-delay: 0.1s;">
+                    <span class="gradient-text">本日の趣旨</span>
+                </h3>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 md:gap-8">
+                <!-- 目的1 -->
+                <div class="reveal-left program-card rounded-3xl p-6 md:p-10">
+                    <div class="flex items-start gap-4 md:gap-6">
+                        <div class="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-kompeito-pink to-kompeito-purple flex items-center justify-center">
+                            <svg class="w-7 h-7 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-lg md:text-xl font-bold mb-3 md:mb-4">CS・PS・OSの相互理解と連携強化</h4>
+                            <p class="text-gray-400 text-sm md:text-base leading-relaxed">
+                                チーム間の壁を越え、一つのチームとして協力し合う関係性を構築します。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 目的2 -->
+                <div class="reveal-right program-card rounded-3xl p-6 md:p-10" style="transition-delay: 0.2s;">
+                    <div class="flex items-start gap-4 md:gap-6">
+                        <div class="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-kompeito-cyan to-kompeito-purple flex items-center justify-center">
+                            <svg class="w-7 h-7 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-lg md:text-xl font-bold mb-3 md:mb-4">営業とCSがそれぞれの視点を理解</h4>
+                            <p class="text-gray-400 text-sm md:text-base leading-relaxed">
+                                互いの業務を知ることで、顧客対応力を高め、より良いサービスを提供します。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 注意事項 -->
+            <div class="reveal-scale mt-12 md:mt-16 text-center" style="transition-delay: 0.4s;">
+                <div class="inline-flex flex-wrap justify-center gap-3 md:gap-4">
+                    <span class="px-5 py-2.5 md:px-6 md:py-3 rounded-full bg-gradient-to-r from-kompeito-pink/30 to-kompeito-purple/30 border-2 border-kompeito-pink/50 text-sm md:text-base text-white font-bold shadow-lg">
+                        💻 PC持参OK
+                    </span>
+                    <span class="px-5 py-2.5 md:px-6 md:py-3 rounded-full bg-gradient-to-r from-kompeito-purple/30 to-kompeito-cyan/30 border-2 border-kompeito-purple/50 text-sm md:text-base text-white font-bold shadow-lg">
+                        📞 緊急電話OK
+                    </span>
+                    <span class="px-5 py-2.5 md:px-6 md:py-3 rounded-full bg-gradient-to-r from-kompeito-cyan/30 to-kompeito-pink/30 border-2 border-kompeito-cyan/50 text-sm md:text-base text-white font-bold shadow-lg">
+                        🎉 自由に表現OK
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- プログラムセクション -->
+    <section id="program" class="relative flex flex-col justify-center py-10 md:py-12 overflow-hidden">
+        <!-- 背景装飾 -->
+        <div class="absolute inset-0 grid-pattern opacity-50"></div>
+
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8 md:mb-10">
+                <h2 class="reveal text-sm md:text-base font-orbitron text-kompeito-pink mb-3 tracking-widest">PROGRAM</h2>
+                <h3 class="reveal text-2xl sm:text-3xl md:text-4xl font-bold" style="transition-delay: 0.1s;">
+                    <span class="gradient-text">プログラム</span>
+                </h3>
+            </div>
+
+            <!-- 5カードグリッド -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
+                <!-- 1. 導入 -->
+                <div class="reveal program-card rounded-xl p-4 text-center" style="transition-delay: 0s;">
+                    <div class="w-10 h-10 mx-auto rounded-full bg-kompeito-pink flex items-center justify-center mb-3">
+                        <span class="text-white font-bold text-sm">01</span>
+                    </div>
+                    <h4 class="text-sm md:text-base font-bold mb-1">導入・本日の趣旨</h4>
+                </div>
+
+                <!-- 2. 擬似商談 -->
+                <div class="reveal program-card rounded-xl p-4 text-center" style="transition-delay: 0.05s;">
+                    <div class="w-10 h-10 mx-auto rounded-full bg-kompeito-purple flex items-center justify-center mb-3">
+                        <span class="text-white font-bold text-sm">02</span>
+                    </div>
+                    <h4 class="text-sm md:text-base font-bold mb-1">擬似商談・引き継ぎ</h4>
+                </div>
+
+                <!-- 3. 業務効率化 -->
+                <div class="reveal program-card rounded-xl p-4 text-center" style="transition-delay: 0.1s;">
+                    <div class="w-10 h-10 mx-auto rounded-full bg-kompeito-cyan flex items-center justify-center mb-3">
+                        <span class="text-white font-bold text-sm">03</span>
+                    </div>
+                    <h4 class="text-sm md:text-base font-bold mb-1">業務効率化</h4>
+                </div>
+
+                <!-- 4. なべしゅんさん -->
+                <div class="reveal program-card rounded-xl p-4 text-center" style="transition-delay: 0.15s;">
+                    <div class="w-10 h-10 mx-auto rounded-full bg-kompeito-orange flex items-center justify-center mb-3">
+                        <span class="text-white font-bold text-sm">04</span>
+                    </div>
+                    <h4 class="text-sm md:text-base font-bold mb-1">なべしゅんさんから</h4>
+                </div>
+
+                <!-- 5. 締めの言葉 -->
+                <div class="reveal program-card rounded-xl p-4 text-center col-span-2 md:col-span-1" style="transition-delay: 0.2s;">
+                    <div class="w-10 h-10 mx-auto rounded-full bg-kompeito-yellow flex items-center justify-center mb-3">
+                        <span class="text-white font-bold text-sm">05</span>
+                    </div>
+                    <h4 class="text-sm md:text-base font-bold mb-1">締めの言葉</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 目的セクション -->
+    <section id="purpose" class="relative flex flex-col justify-center py-12 md:py-16 bg-gradient-to-b from-black via-purple-950/10 to-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 md:mb-20">
+                <h2 class="reveal text-sm md:text-base font-orbitron text-kompeito-purple mb-4 tracking-widest">PURPOSE</h2>
+                <h3 class="reveal text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold" style="transition-delay: 0.1s;">
+                    <span class="gradient-text">擬似商談の趣旨</span>
+                </h3>
+            </div>
+
+            <!-- カード -->
+            <div class="grid lg:grid-cols-2 gap-6 md:gap-8">
+                <!-- 営業の視点 -->
+                <div class="reveal-left">
+                    <div class="glow-box rounded-3xl">
+                        <div class="program-card rounded-3xl p-6 md:p-10 h-full">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-gradient-to-br from-kompeito-pink to-kompeito-orange flex items-center justify-center text-xl md:text-2xl">
+                                    📊
+                                </div>
+                                <h4 class="text-2xl md:text-3xl font-bold">営業</h4>
+                            </div>
+                            <ul class="space-y-4 text-gray-300 text-sm md:text-base">
+                                <li class="flex items-start gap-3">
+                                    <span class="text-kompeito-pink mt-1">▸</span>
+                                    <span>擬似商談後に、CSが日頃どのように顧客のケアを行い、サクセスにつなげているかを知る</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-kompeito-pink mt-1">▸</span>
+                                    <span>フォーマットは違っても、<strong class="text-white">CSに必要なヒアリング項目は共通</strong>。今日の観点を商談で回収し、引き継ぎに落とす</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CSの視点 -->
+                <div class="reveal-right" style="transition-delay: 0.2s;">
+                    <div class="glow-box rounded-3xl">
+                        <div class="program-card rounded-3xl p-6 md:p-10 h-full">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-gradient-to-br from-kompeito-cyan to-kompeito-purple flex items-center justify-center text-xl md:text-2xl">
+                                    🤝
+                                </div>
+                                <h4 class="text-2xl md:text-3xl font-bold">CS</h4>
+                            </div>
+                            <ul class="space-y-4 text-gray-300 text-sm md:text-base">
+                                <li class="flex items-start gap-3">
+                                    <span class="text-kompeito-cyan mt-1">▸</span>
+                                    <span>擬似商談を通して、営業が商談の中でどのような話をしているかを知る</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-kompeito-cyan mt-1">▸</span>
+                                    <span>営業が積み上げた商談の背景を汲み取り、<strong class="text-white">引き継ぎを無駄にしない形で</strong>ケアと連携に活かす</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 観る側の心構えセクション（独立） -->
+    <section class="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-black via-kompeito-purple/5 to-black">
+        <!-- 背景装飾 -->
+        <div class="absolute inset-0 grid-pattern opacity-20"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-kompeito-purple/10 rounded-full blur-3xl"></div>
+        
+        <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="reveal-scale">
+                <div class="glow-box rounded-3xl">
+                    <div class="program-card rounded-3xl p-8 md:p-12 lg:p-16 text-center">
+                        <div class="mb-6 md:mb-8">
+                            <span class="inline-block text-4xl md:text-5xl mb-4">👁️</span>
+                            <h4 class="text-2xl md:text-3xl lg:text-4xl font-bold gradient-text">観る側の心構え</h4>
+                        </div>
+                        <div class="space-y-4 md:space-y-6">
+                            <p class="text-xl md:text-2xl lg:text-3xl text-white font-bold">
+                                擬似商談は<span class="text-kompeito-pink">ロープレではない</span>
+                            </p>
+                            <p class="text-base md:text-lg lg:text-xl text-gray-300 leading-relaxed">
+                                商談の良し悪しを評価する目線ではなく、
+                            </p>
+                            <p class="text-lg md:text-xl lg:text-2xl text-kompeito-cyan font-bold leading-relaxed">
+                                「引き継ぎに必要な情報は何か」<br>
+                                「CSが必要な項目はどこなのか」
+                            </p>
+                            <p class="text-base md:text-lg lg:text-xl text-gray-300">
+                                という観点で<span class="text-white font-bold">フラットに</span>見ること
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 詳細セクション -->
+    <section id="details" class="relative flex flex-col justify-center py-8 md:py-10">
+        <div class="absolute inset-0 grid-pattern opacity-30"></div>
+        
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-6 md:mb-8">
+                <h2 class="reveal text-sm md:text-base font-orbitron text-kompeito-orange mb-2 tracking-widest">DETAILS</h2>
+                <h3 class="reveal text-2xl sm:text-3xl md:text-4xl font-bold" style="transition-delay: 0.1s;">
+                    <span class="gradient-text" style="font-size: 48px;">擬似商談詳細</span>
+                </h3>
+            </div>
+
+            <!-- 企業情報 + 商談ポイント 横並び -->
+            <div class="grid lg:grid-cols-2 gap-4 md:gap-6">
+                <!-- 企業情報 -->
+                <div class="reveal-left">
+                    <div class="program-card rounded-2xl p-4 md:p-6 h-full">
+                        <h4 class="text-lg md:text-xl font-bold mb-4 flex items-center gap-2">
+                            <span class="text-xl">🏢</span>
+                            株式会社アミノアップ
+                        </h4>
+                        <div class="grid grid-cols-2 gap-2 md:gap-3">
+                            <div class="bg-white/5 rounded-xl p-3">
+                                <p class="text-gray-400 text-xs mb-0.5">業種</p>
+                                <p class="text-white text-sm font-bold">食品メーカー</p>
+                            </div>
+                            <div class="bg-white/5 rounded-xl p-3">
+                                <p class="text-gray-400 text-xs mb-0.5">従業員数</p>
+                                <p class="text-white text-sm font-bold">74人</p>
+                            </div>
+                            <div class="bg-white/5 rounded-xl p-3">
+                                <p class="text-gray-400 text-xs mb-0.5">商談相手</p>
+                                <p class="text-white text-sm font-bold">TRの決裁者</p>
+                            </div>
+                            <div class="bg-white/5 rounded-xl p-3">
+                                <p class="text-gray-400 text-xs mb-0.5">特徴</p>
+                                <p class="text-white text-sm font-bold">寡黙そうな方</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 商談時のポイント -->
+                <div class="reveal-right space-y-3" style="transition-delay: 0.1s;">
+                    <div class="program-card rounded-2xl p-4 md:p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="w-8 h-8 rounded-lg bg-kompeito-pink/20 flex items-center justify-center">
+                                <span class="text-lg">💬</span>
+                            </div>
+                            <h4 class="text-base md:text-lg font-bold">言葉遣い</h4>
+                        </div>
+                        <p class="text-gray-300 text-xs md:text-sm leading-relaxed">
+                            まさに<span class="text-kompeito-pink font-bold">信頼</span>！話し方や言葉遣いの正確さが、営業としての信頼につながる。
+                        </p>
+                    </div>
+                    <div class="program-card rounded-2xl p-4 md:p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="w-8 h-8 rounded-lg bg-kompeito-cyan/20 flex items-center justify-center">
+                                <span class="text-lg">🎯</span>
+                            </div>
+                            <h4 class="text-base md:text-lg font-bold">言葉のキャッチボール</h4>
+                        </div>
+                        <p class="text-gray-300 text-xs md:text-sm leading-relaxed">
+                            相手の反応を受け取りながら会話を組み立て、<span class="text-kompeito-cyan font-bold">キャッチボール</span>を意識する。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 引き継ぎの活用方法セクション -->
+    <section class="relative min-h-screen flex flex-col justify-center py-16 md:py-20 bg-gradient-to-b from-black via-kompeito-cyan/5 to-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 md:mb-20">
+                <h2 class="reveal text-sm md:text-base font-orbitron text-kompeito-cyan mb-4 tracking-widest">HANDOVER</h2>
+                <h3 class="reveal text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold" style="transition-delay: 0.1s;">
+                    <span class="gradient-text">引き継ぎの活用方法</span>
+                </h3>
+            </div>
+
+            <!-- メインカード -->
+            <div class="reveal-scale mx-auto mb-12 md:mb-16" style="max-width: 1200px;">
+                <div class="glow-box rounded-3xl">
+                    <div class="program-card rounded-3xl p-8 md:p-12">
+                        <div class="flex items-center gap-4 mb-8">
+                            <div class="w-14 h-14 md:w-16 md:h-16 rounded-xl bg-gradient-to-br from-kompeito-cyan to-kompeito-purple flex items-center justify-center text-2xl md:text-3xl">
+                                📋
+                            </div>
+                            <h4 class="text-2xl md:text-3xl font-bold">CSが営業の引き継ぎをどのように活かしているか</h4>
+                        </div>
+                        <p class="text-gray-300 text-xl mb-8 leading-relaxed">
+                            営業からの引き継ぎをもとに、<strong class="text-white">安心して使い始め、納得したうえで継続を判断できる</strong>TR期間にすること
+                        </p>
+                        
+                        <div class="grid md:grid-cols-3 gap-6 md:gap-8">
+                            <div class="bg-white/5 rounded-2xl p-6 md:p-8">
+                                <div class="text-3xl mb-4">🎯</div>
+                                <h5 class="text-kompeito-cyan font-bold mb-3 text-lg">TRの目的</h5>
+                                <p class="text-gray-400 text-base leading-relaxed">
+                                    ODYに対して顧客が持っている<strong class="text-white">期待・イメージ・温度感を揃えたうえで伴走するため</strong>
+                                </p>
+                            </div>
+                            <div class="bg-white/5 rounded-2xl p-6 md:p-8">
+                                <div class="text-3xl mb-4">🔍</div>
+                                <h5 class="text-kompeito-pink font-bold mb-3 text-lg">不安や課題の早期把握と解消</h5>
+                                <p class="text-gray-400 text-base leading-relaxed">
+                                    利用・運用面での不安や懸念を早期に把握し、<strong class="text-white">ネックを先回りして解消する</strong>
+                                </p>
+                            </div>
+                            <div class="bg-white/5 rounded-2xl p-6 md:p-8">
+                                <div class="text-3xl mb-4">⚖️</div>
+                                <h5 class="text-kompeito-orange font-bold mb-3 text-lg">商品個数と利用実態の最適化</h5>
+                                <p class="text-gray-400 text-base leading-relaxed">
+                                    働き方や人数に合わせて、<strong class="text-white">無理なく使い切れる個数に調整する</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 補足：今CSが行っている動き -->
+            <div class="reveal mx-auto" style="transition-delay: 0.2s; max-width: 1200px;">
+                <div class="program-card rounded-3xl p-8 md:p-12">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-14 h-14 md:w-16 md:h-16 rounded-xl bg-gradient-to-br from-kompeito-purple to-kompeito-pink flex items-center justify-center text-2xl md:text-3xl">
+                            📊
+                        </div>
+                        <h4 class="text-2xl md:text-3xl font-bold">補足：今CSが行っている動き</h4>
+                    </div>
+                    <div class="rounded-2xl overflow-hidden">
+                        <img src="image/スクリーンショット 2025-12-19 11.05.07.png" alt="CSの動き" class="w-full h-auto">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 業務効率化セクション -->
+    <section id="efficiency" class="relative min-h-screen flex flex-col justify-center py-16 md:py-20 bg-gradient-to-b from-black via-kompeito-cyan/5 to-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 md:mb-16">
+                <h2 class="reveal text-sm md:text-base font-orbitron text-kompeito-cyan mb-4 tracking-widest">EFFICIENCY</h2>
+                <h3 class="reveal text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold" style="transition-delay: 0.1s;">
+                    <span class="gradient-text">業務効率化に関して</span>
+                </h3>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
+                <!-- 荒巻パート -->
+                <div class="reveal-left">
+                    <div id="aramaki-card" class="efficiency-card rounded-3xl cursor-pointer transition-all duration-500 border-2 border-dashed border-white/30 hover:border-white/50">
+                        <div class="program-card rounded-3xl p-8 md:p-10 h-full text-center bg-transparent">
+                            <div id="aramaki-icon" class="w-16 h-16 md:w-20 md:h-20 mx-auto rounded-2xl bg-white/10 flex items-center justify-center mb-6 transition-all duration-500">
+                                <span class="text-3xl md:text-4xl">👤</span>
+                            </div>
+                            <h4 class="text-2xl md:text-3xl font-bold mb-4">荒巻パート</h4>
+                            <p class="text-gray-400 text-sm md:text-base">業務効率化の取り組みについて</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 赤井パート -->
+                <div class="reveal-right" style="transition-delay: 0.2s;">
+                    <div id="akai-card" class="efficiency-card rounded-3xl cursor-pointer transition-all duration-500 border-2 border-dashed border-white/30 hover:border-white/50">
+                        <div class="program-card rounded-3xl p-8 md:p-10 h-full text-center bg-transparent">
+                            <div id="akai-icon" class="w-16 h-16 md:w-20 md:h-20 mx-auto rounded-2xl bg-white/10 flex items-center justify-center mb-6 transition-all duration-500">
+                                <span class="text-3xl md:text-4xl">👤</span>
+                            </div>
+                            <h4 class="text-2xl md:text-3xl font-bold mb-4">赤井パート</h4>
+                            <p class="text-gray-400 text-sm md:text-base">業務効率化の取り組みについて</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- なべしゅんさんからセクション -->
+    <section id="message" class="relative min-h-screen flex flex-col justify-center py-16 md:py-20 bg-gradient-to-b from-black via-kompeito-orange/5 to-black">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 md:mb-16">
+                <h2 class="reveal text-sm md:text-base font-orbitron text-kompeito-orange mb-4 tracking-widest">MESSAGE</h2>
+                <h3 class="reveal text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold" style="transition-delay: 0.1s;">
+                    <span class="gradient-text">なべしゅんさんから</span>
+                </h3>
+            </div>
+
+            <div class="reveal-scale">
+                <div class="glow-box rounded-3xl">
+                    <div class="program-card rounded-3xl p-8 md:p-12 lg:p-16 text-center">
+                        <div class="w-20 h-20 md:w-24 md:h-24 mx-auto rounded-full bg-gradient-to-br from-kompeito-orange to-kompeito-yellow flex items-center justify-center mb-8">
+                            <span class="text-4xl md:text-5xl">🎤</span>
+                        </div>
+                        <h4 class="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 gradient-text">スペシャルメッセージ</h4>
+                        <p class="text-gray-300 text-lg md:text-xl leading-relaxed">
+                            なべしゅんさんからのメッセージをお届けします
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- フッターセクション -->
+    <section class="relative min-h-screen flex flex-col justify-center py-16 md:py-20 bg-gradient-to-b from-black via-kompeito-purple/5 to-black overflow-hidden">
+        <!-- 背景装飾 -->
+        <div class="absolute inset-0">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] md:w-[800px] md:h-[800px]">
+                <div class="absolute inset-0 bg-gradient-to-r from-kompeito-pink via-kompeito-purple to-kompeito-cyan rounded-full blur-3xl opacity-20 animate-spin-slow"></div>
+            </div>
+        </div>
+
+        <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="reveal">
+                <h3 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 md:mb-8">
+                    <span class="gradient-text">KOMPEI TRIBE</span>として
+                    OS・PS・CSの連携を継続していきます！
+                </h3>
+            </div>
+            <div class="reveal" style="transition-delay: 0.2s;">
+                <p class="text-xl md:text-2xl text-gray-300 mb-8 md:mb-12">
+                    カジュアルにコミュニケーションを<br class="md:hidden">どんどんとっていきましょう🫶
+                </p>
+            </div>
+            <div class="reveal" style="transition-delay: 0.4s;">
+                <div class="inline-block">
+                    <div class="glow-box rounded-full">
+                        <button id="onepeito-btn" class="btn-glow inline-block px-8 py-4 md:px-12 md:py-5 rounded-full bg-gradient-to-r from-kompeito-pink via-kompeito-purple to-kompeito-cyan text-white font-bold text-lg md:text-xl cursor-pointer hover:scale-105 transition-transform">
+                            Let's go ONEPEITO! 🚀
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SHUNモーダル -->
+    <div id="shun-modal" class="fixed inset-0 z-[100] hidden">
+        <!-- 背景オーバーレイ -->
+        <div class="absolute inset-0 bg-black/95 backdrop-blur-lg"></div>
+        
+        <!-- 紙吹雪コンテナ -->
+        <div id="confetti-container" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+        
+        <!-- コンテンツ -->
+        <div class="relative z-10 flex flex-col items-center justify-center min-h-screen p-4">
+            <!-- テキスト -->
+            <div id="shun-text" class="text-center opacity-0 transform scale-50 transition-all duration-700">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+                    <span class="gradient-text">「SHUN」</span>をキーワードに
+                </h2>
+                <p class="text-xl sm:text-2xl md:text-3xl text-white font-bold">
+                    営業とCS一丸で頑張ろう！
+                </p>
+            </div>
+            
+            <!-- 画像 -->
+            <div id="shun-image" class="mt-8 md:mt-12 opacity-0 transform translate-y-10 transition-all duration-700 delay-500 max-w-5xl w-full">
+                <img src="image/スクリーンショット 2025-12-18 10.42.25.png" alt="SHUN - Success, Harmony, Understanding, Next" class="w-full h-auto rounded-2xl shadow-2xl">
+            </div>
+            
+            <!-- 閉じるボタン -->
+            <button id="close-modal" class="mt-8 md:mt-12 px-6 py-3 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-colors opacity-0 transform translate-y-5 transition-all duration-500 delay-1000">
+                閉じる ✕
+            </button>
+        </div>
+    </div>
+
+    <!-- フッター -->
+    <footer class="py-6 md:py-8 border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="font-orbitron text-xl md:text-2xl gradient-text mb-2">ONEPEITO</p>
+            <p class="text-gray-500 text-xs md:text-sm">© 2025 KOMPEITO. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // スクロールアニメーション
+        const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+        
+        const revealOnScroll = () => {
+            revealElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementTop < windowHeight - 100) {
+                    element.classList.add('active');
+                }
+            });
+        };
+
+        // 初回読み込み時とスクロール時に実行
+        window.addEventListener('load', revealOnScroll);
+        window.addEventListener('scroll', revealOnScroll);
+
+        // ナビゲーションのスクロール効果
+        const navbar = document.getElementById('navbar');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-black/80', 'backdrop-blur-lg', 'shadow-lg');
+                navbar.classList.remove('bg-transparent');
+            } else {
+                navbar.classList.remove('bg-black/80', 'backdrop-blur-lg', 'shadow-lg');
+                navbar.classList.add('bg-transparent');
+            }
+        });
+
+        // モバイルメニュー
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // モバイルメニューのリンククリックでメニューを閉じる
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // 金平糖パーティクルの生成
+        const createParticles = () => {
+            const container = document.getElementById('particles-container');
+            const colors = ['#ff6b9d', '#c77dff', '#00f5d4', '#ffa500', '#ffe66d'];
+            
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'kompeito-particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.width = (Math.random() * 15 + 8) + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = (Math.random() * 6) + 's';
+                particle.style.opacity = (Math.random() * 0.5 + 0.2);
+                container.appendChild(particle);
+            }
+        };
+
+        createParticles();
+
+        // パララックス効果
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            const parallaxElements = document.querySelectorAll('.parallax');
+            
+            parallaxElements.forEach(element => {
+                const speed = element.dataset.speed || 0.5;
+                element.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+
+        // マウス追従効果（デスクトップのみ）
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => {
+                const stageLights = document.querySelectorAll('.stage-light');
+                const x = e.clientX / window.innerWidth;
+                const y = e.clientY / window.innerHeight;
+                
+                stageLights.forEach((light, index) => {
+                    const offsetX = (x - 0.5) * (index + 1) * 30;
+                    const offsetY = (y - 0.5) * (index + 1) * 30;
+                    light.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+                });
+            });
+        }
+
+        // スムーズスクロール（Safari対応）
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // SHUNモーダル機能
+        const onepeitoBtn = document.getElementById('onepeito-btn');
+        const shunModal = document.getElementById('shun-modal');
+        const closeModal = document.getElementById('close-modal');
+        const shunText = document.getElementById('shun-text');
+        const shunImage = document.getElementById('shun-image');
+        const confettiContainer = document.getElementById('confetti-container');
+
+        // 紙吹雪を生成
+        const createConfetti = () => {
+            const colors = ['#ff6b9d', '#c77dff', '#00f5d4', '#ffa500', '#ffe66d', '#ff4757', '#2ed573'];
+            const shapes = ['circle', 'square', 'triangle'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                const shape = shapes[Math.floor(Math.random() * shapes.length)];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const size = Math.random() * 15 + 5;
+                const startX = Math.random() * 100;
+                const startY = -10;
+                const endX = startX + (Math.random() - 0.5) * 50;
+                const endY = 110;
+                const duration = Math.random() * 2 + 2;
+                const delay = Math.random() * 0.5;
+                const rotation = Math.random() * 720;
+                
+                confetti.style.cssText = `
+                    position: absolute;
+                    left: ${startX}%;
+                    top: ${startY}%;
+                    width: ${size}px;
+                    height: ${size}px;
+                    background: ${color};
+                    opacity: 0.9;
+                    ${shape === 'circle' ? 'border-radius: 50%;' : ''}
+                    ${shape === 'triangle' ? 'clip-path: polygon(50% 0%, 0% 100%, 100% 100%);' : ''}
+                    animation: confetti-fall ${duration}s ease-out ${delay}s forwards;
+                `;
+                
+                confettiContainer.appendChild(confetti);
+            }
+        };
+
+        // CSSアニメーションを追加
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes confetti-fall {
+                0% {
+                    transform: translateY(0) rotate(0deg) scale(1);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(100vh) rotate(720deg) scale(0.5);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // ボタンクリック時
+        onepeitoBtn.addEventListener('click', () => {
+            // モーダルを表示
+            shunModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            
+            // 紙吹雪を生成
+            confettiContainer.innerHTML = '';
+            createConfetti();
+            
+            // テキストをアニメーション表示
+            setTimeout(() => {
+                shunText.style.opacity = '1';
+                shunText.style.transform = 'scale(1)';
+            }, 300);
+            
+            // 画像をアニメーション表示
+            setTimeout(() => {
+                shunImage.style.opacity = '1';
+                shunImage.style.transform = 'translateY(0)';
+            }, 800);
+            
+            // 閉じるボタンを表示
+            setTimeout(() => {
+                closeModal.style.opacity = '1';
+                closeModal.style.transform = 'translateY(0)';
+            }, 1200);
+        });
+
+        // モーダルを閉じる
+        const closeShunModal = () => {
+            shunText.style.opacity = '0';
+            shunText.style.transform = 'scale(0.5)';
+            shunImage.style.opacity = '0';
+            shunImage.style.transform = 'translateY(10px)';
+            closeModal.style.opacity = '0';
+            closeModal.style.transform = 'translateY(5px)';
+            
+            setTimeout(() => {
+                shunModal.classList.add('hidden');
+                document.body.style.overflow = '';
+                confettiContainer.innerHTML = '';
+            }, 500);
+        };
+
+        closeModal.addEventListener('click', closeShunModal);
+        
+        // 背景クリックでも閉じる
+        shunModal.addEventListener('click', (e) => {
+            if (e.target === shunModal || e.target.classList.contains('backdrop-blur-lg')) {
+                closeShunModal();
+            }
+        });
+        
+        // ESCキーで閉じる
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !shunModal.classList.contains('hidden')) {
+                closeShunModal();
+            }
+        });
+
+        // 業務効率化カードのトグル機能
+        const aramakiCard = document.getElementById('aramaki-card');
+        const aramakiIcon = document.getElementById('aramaki-icon');
+        const akaiCard = document.getElementById('akai-card');
+        const akaiIcon = document.getElementById('akai-icon');
+
+        let aramakiActive = false;
+        let akaiActive = false;
+
+        aramakiCard.addEventListener('click', () => {
+            aramakiActive = !aramakiActive;
+            if (aramakiActive) {
+                aramakiCard.classList.remove('border-dashed', 'border-white/30');
+                aramakiCard.classList.add('glow-box', 'border-solid', 'border-kompeito-pink/50');
+                aramakiIcon.classList.remove('bg-white/10');
+                aramakiIcon.classList.add('bg-gradient-to-br', 'from-kompeito-pink', 'to-kompeito-purple');
+            } else {
+                aramakiCard.classList.add('border-dashed', 'border-white/30');
+                aramakiCard.classList.remove('glow-box', 'border-solid', 'border-kompeito-pink/50');
+                aramakiIcon.classList.add('bg-white/10');
+                aramakiIcon.classList.remove('bg-gradient-to-br', 'from-kompeito-pink', 'to-kompeito-purple');
+            }
+        });
+
+        akaiCard.addEventListener('click', () => {
+            akaiActive = !akaiActive;
+            if (akaiActive) {
+                akaiCard.classList.remove('border-dashed', 'border-white/30');
+                akaiCard.classList.add('glow-box', 'border-solid', 'border-kompeito-cyan/50');
+                akaiIcon.classList.remove('bg-white/10');
+                akaiIcon.classList.add('bg-gradient-to-br', 'from-kompeito-cyan', 'to-kompeito-purple');
+            } else {
+                akaiCard.classList.add('border-dashed', 'border-white/30');
+                akaiCard.classList.remove('glow-box', 'border-solid', 'border-kompeito-cyan/50');
+                akaiIcon.classList.add('bg-white/10');
+                akaiIcon.classList.remove('bg-gradient-to-br', 'from-kompeito-cyan', 'to-kompeito-purple');
+            }
+        });
+    </script>
+</body>
+</html>

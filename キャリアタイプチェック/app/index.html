@@ -12,8 +12,8 @@
     <!-- Header -->
     <header class="page-header">
       <div class="container">
-        <h1>Career Type Assessment</h1>
-        <p>12 Types × 36 Questions</p>
+        <h1>キャリアタイプ診断</h1>
+        <p>12タイプ × 36問</p>
       </div>
     </header>
 
@@ -22,10 +22,10 @@
       <div class="container">
         <!-- Hero Section -->
         <section class="hero-section fade-in">
-          <span class="hero-eyebrow">Discover Your True Potential</span>
+          <span class="hero-eyebrow">あなたの可能性を発見しよう</span>
           <h2 class="hero-title">
-            <span class="line">Find Your</span>
-            <span class="line gradient">Career Type</span>
+            <span class="line">あなたの</span>
+            <span class="line gradient">キャリアタイプは？</span>
           </h2>
           <p class="hero-subtitle">
             36問の診断であなたのキャリアタイプを特定。<br>
@@ -34,39 +34,19 @@
           
           <!-- Resume Notice -->
           <div class="resume-notice hidden" id="resumeNotice">
-            <strong>Continue where you left off</strong>
-            <span id="resumeProgress">12 / 36 completed</span>
+            <strong>続きから再開できます</strong>
+            <span id="resumeProgress">12 / 36 問回答済み</span>
           </div>
           
           <!-- Completed Notice -->
           <div class="resume-notice hidden" id="completedNotice">
-            <strong>Assessment Complete</strong>
-            <span id="completedInfo">View your results or start a new assessment</span>
+            <strong>診断完了</strong>
+            <span id="completedInfo">結果を確認するか、新しく診断を始めましょう</span>
           </div>
           
           <!-- Actions -->
           <div class="hero-actions" id="heroActions">
             <!-- Buttons will be rendered dynamically -->
-          </div>
-        </section>
-
-        <!-- Stats -->
-        <section class="stats-grid fade-in">
-          <div class="stat-item">
-            <div class="stat-number">36</div>
-            <div class="stat-label">Questions</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-number">12</div>
-            <div class="stat-label">Types</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-number">5</div>
-            <div class="stat-label">Axes</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-number">5-10</div>
-            <div class="stat-label">Minutes</div>
           </div>
         </section>
       </div>
@@ -75,7 +55,7 @@
     <!-- Footer -->
     <footer class="page-footer">
       <div class="container">
-        <p>© 2025 Career Type Assessment</p>
+        <p>© 2025 キャリアタイプ診断</p>
       </div>
     </footer>
   </div>
@@ -105,13 +85,13 @@
         completedNotice.classList.remove('hidden');
         const completedDate = storage.getCompletedAt();
         if (completedDate) {
-          completedInfo.textContent = `Completed on ${formatDate(completedDate)}`;
+          completedInfo.textContent = `${formatDate(completedDate)} に診断完了`;
         }
         
         heroActions.innerHTML = `
-          <a href="result.html" class="btn btn-primary btn-lg">View Results</a>
+          <a href="result.html" class="btn btn-primary btn-lg">結果を見る</a>
           <button type="button" class="btn btn-secondary btn-lg" id="newDiagnosisBtn">
-            Start Over
+            最初からやり直す
           </button>
         `;
         
@@ -119,12 +99,12 @@
         
       } else if (hasProgress) {
         resumeNotice.classList.remove('hidden');
-        resumeProgress.textContent = `${answeredCount} / ${QUESTIONS.length} completed`;
+        resumeProgress.textContent = `${answeredCount} / ${QUESTIONS.length} 問回答済み`;
         
         heroActions.innerHTML = `
-          <a href="questions.html" class="btn btn-primary btn-lg">Continue</a>
+          <a href="questions.html" class="btn btn-primary btn-lg">続きから再開</a>
           <button type="button" class="btn btn-secondary btn-lg" id="resetBtn">
-            Start Over
+            最初からやり直す
           </button>
         `;
         
@@ -132,20 +112,20 @@
         
       } else {
         heroActions.innerHTML = `
-          <a href="questions.html" class="btn btn-primary btn-lg">Start Assessment</a>
+          <a href="questions.html" class="btn btn-primary btn-lg">診断をはじめる</a>
         `;
       }
     }
 
     function handleNewDiagnosis() {
-      if (confirm('Clear current results and start a new assessment?')) {
+      if (confirm('現在の結果をクリアして、新しく診断を始めますか？')) {
         storage.clear();
         navigation.goToQuestions();
       }
     }
 
     function handleReset() {
-      if (confirm('Reset progress and start over?')) {
+      if (confirm('進捗をリセットして、最初からやり直しますか？')) {
         storage.clear();
         navigation.goToQuestions();
       }
