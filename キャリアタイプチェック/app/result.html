@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Results | キャリアタイプ12診断</title>
+  <title>診断結果 | キャリアタイプ12診断</title>
   <meta name="description" content="あなたのキャリアタイプ診断結果です。">
   <link rel="stylesheet" href="styles.css">
   <!-- Chart.js CDN -->
@@ -14,8 +14,8 @@
     <!-- Header -->
     <header class="page-header">
       <div class="container">
-        <h1>Assessment Results</h1>
-        <p>Your Career Type Has Been Identified</p>
+        <h1>診断結果</h1>
+        <p>あなたのキャリアタイプが判明しました</p>
       </div>
     </header>
 
@@ -24,12 +24,12 @@
       <div class="container">
         <!-- Result Header -->
         <div class="result-header fade-in">
-          <span class="label">Your Primary Career Type</span>
+          <span class="label">あなたの主要キャリアタイプ</span>
         </div>
 
         <!-- Tie Notice (shown when multiple types have same score) -->
         <div class="type-tie-notice hidden" id="tieNotice">
-          🎉 Multiple types tied for first! Click tabs to see details
+          🎉 複数のタイプが同点で1位になりました！タブをクリックして詳細を確認してください
         </div>
 
         <!-- Type Tabs (for ties) -->
@@ -53,7 +53,7 @@
         <!-- Radar Chart Section -->
         <div class="chart-section">
           <div class="chart-container">
-            <h3>Ability Parameters</h3>
+            <h3>能力パラメータ</h3>
             <div class="chart-wrapper">
               <canvas id="radarChart"></canvas>
             </div>
@@ -64,19 +64,19 @@
         <div class="type-details fade-in" id="typeDetails">
           <!-- Chart Shape -->
           <div class="detail-section">
-            <h3>Chart Pattern</h3>
+            <h3>チャートパターン</h3>
             <p id="chartShape">突破力特化型</p>
           </div>
 
           <!-- Company Size -->
           <div class="detail-section">
-            <h3>Best Fit Company Size</h3>
+            <h3>最適な企業規模</h3>
             <p id="companySize">スタートアップ（創業期）</p>
           </div>
 
           <!-- Keywords -->
           <div class="detail-section">
-            <h3>Keywords & Environment</h3>
+            <h3>キーワードと環境</h3>
             <div class="keywords-grid" id="keywords">
               <!-- Keywords will be rendered here -->
             </div>
@@ -86,7 +86,7 @@
         <!-- Score Breakdown -->
         <div class="type-details">
           <div class="detail-section">
-            <h3>Score Breakdown</h3>
+            <h3>スコア内訳</h3>
             <div class="score-breakdown" id="scoreBreakdown">
               <!-- Scores will be rendered here -->
             </div>
@@ -96,10 +96,10 @@
         <!-- Actions -->
         <div class="result-actions mt-xl">
           <button type="button" class="btn btn-primary btn-lg" id="retryBtn">
-            Retake Assessment
+            もう一度診断する
           </button>
           <a href="index.html" class="btn btn-secondary btn-lg">
-            Back to Home
+            ホームに戻る
           </a>
         </div>
       </div>
@@ -108,7 +108,7 @@
     <!-- Footer -->
     <footer class="page-footer">
       <div class="container">
-        <p class="text-muted" id="completedAt">Completed: --</p>
+        <p class="text-muted" id="completedAt">診断完了日時: --</p>
       </div>
     </footer>
   </div>
@@ -273,7 +273,7 @@
         },
         options: {
           responsive: true,
-          maintainAspectRatio: true,
+          maintainAspectRatio: false,
           scales: {
             r: {
               beginAtZero: true,
@@ -285,13 +285,13 @@
                 backdropColor: 'transparent',
                 color: '#5a6c7d', // はっきり見えるダークグレー
                 font: {
-                  size: 11,
+                  size: window.innerWidth <= 640 ? 9 : 11,
                   family: "'SF Mono', monospace"
                 }
               },
               pointLabels: {
                 font: {
-                  size: 13,
+                  size: window.innerWidth <= 640 ? 11 : 13,
                   weight: '600',
                   family: "'Hiragino Kaku Gothic ProN', sans-serif"
                 },
@@ -367,7 +367,7 @@
     function renderCompletedAt() {
       const date = storage.getCompletedAt();
       if (date) {
-        completedAt.textContent = `Completed: ${formatDate(date)}`;
+        completedAt.textContent = `診断完了日時: ${formatDate(date)}`;
       }
     }
 
