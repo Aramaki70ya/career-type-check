@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="styles.css">
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- html2canvas for image export -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
 <body>
   <div class="page">
@@ -95,7 +97,10 @@
 
         <!-- Actions -->
         <div class="result-actions mt-xl">
-          <button type="button" class="btn btn-primary btn-lg" id="retryBtn">
+          <button type="button" class="btn btn-primary btn-lg" id="saveImageBtn">
+            📷 画像として保存
+          </button>
+          <button type="button" class="btn btn-secondary btn-lg" id="retryBtn">
             もう一度診断する
           </button>
           <a href="index.html" class="btn btn-secondary btn-lg">
@@ -143,9 +148,25 @@
     const scoreBreakdown = document.getElementById('scoreBreakdown');
     const completedAt = document.getElementById('completedAt');
     const retryBtn = document.getElementById('retryBtn');
+    const saveImageBtn = document.getElementById('saveImageBtn');
 
     // Initialize
     function init() {
+      // 開発用: URLパラメータに?test=1がある場合、テストデータを設定
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('test') === '1') {
+        const answers = {};
+        for (let i = 1; i <= 36; i++) {
+          const qId = 'q' + String(i).padStart(2, '0');
+          answers[qId] = 2; // ややあてはまる（2点）
+        }
+        storage.saveAnswers(answers);
+        storage.saveCompletedAt(new Date());
+        // URLから?test=1を削除してリロード（リダイレクトを防ぐ）
+        window.location.href = window.location.pathname;
+        return;
+      }
+      
       // Check if completed
       if (!storage.isCompleted()) {
         // Redirect to questions if not completed
@@ -377,8 +398,294 @@
       navigation.goToQuestions();
     }
 
+    // Save result as image
+    async function saveResultAsImage() {
+      try {
+        // ボタンを無効化してローディング状態に
+        saveImageBtn.disabled = true;
+        saveImageBtn.textContent = '📷 画像を生成中...';
+
+        const type = getTypeById(selectedTypeId);
+        if (!type) {
+          throw new Error('タイプ情報が見つかりません');
+        }
+
+        const group = GROUPS[type.group];
+
+        // インスタグラムストーリー用のサイズ（1080x1920）
+        const targetWidth = 1080;
+        const targetHeight = 1920;
+        const padding = 50;
+        const contentWidth = targetWidth - padding * 2;
+        
+        // メインキャンバスを作成
+        const mainCanvas = document.createElement('canvas');
+        mainCanvas.width = targetWidth;
+        mainCanvas.height = targetHeight;
+        const ctx = mainCanvas.getContext('2d');
+        
+        // 背景色を塗りつぶし
+        ctx.fillStyle = '#fef9f3';
+        ctx.fillRect(0, 0, targetWidth, targetHeight);
+        
+        // 上部に十分な余白を確保（タイトルが切れないように）
+        let currentY = padding + 60;
+        
+        // 1. タイトル（大きく）
+        ctx.fillStyle = '#2c3e50';
+        ctx.font = 'bold 64px "Hiragino Kaku Gothic ProN", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('診断結果', targetWidth / 2, currentY);
+        currentY += 70;
+        
+        ctx.font = '32px "Hiragino Kaku Gothic ProN", sans-serif';
+        ctx.fillStyle = 'rgba(44, 62, 80, 0.7)';
+        ctx.fillText('あなたのキャリアタイプ', targetWidth / 2, currentY);
+        currentY += 50;
+        
+        // 2. グループ名を先に描画（画像の上に重ならないように）
+        ctx.fillStyle = '#FF6B35';
+        ctx.font = 'bold 26px "Hiragino Kaku Gothic ProN", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(`Group ${type.group} — ${group.name}`, targetWidth / 2, currentY);
+        currentY += 45;
+        
+        // 3. タイプ画像を描画（大きく）
+        const typeAnimalImage = document.getElementById('typeAnimalImage');
+        if (typeAnimalImage && typeAnimalImage.complete && typeAnimalImage.naturalWidth > 0) {
+          const imgSize = 300;
+          const imgX = (targetWidth - imgSize) / 2;
+          ctx.drawImage(typeAnimalImage, imgX, currentY, imgSize, imgSize);
+          currentY += imgSize + 60; // 余白を増やして文字と被らないように
+        } else {
+          // 画像が読み込まれていない場合、少し余白を追加
+          currentY += 20;
+        }
+        
+        // 4. タイプ名（大きく）
+        ctx.fillStyle = '#2c3e50';
+        ctx.font = 'bold 76px "Hiragino Kaku Gothic ProN", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(type.name, targetWidth / 2, currentY);
+        currentY += 65;
+        
+        ctx.font = '42px "Hiragino Kaku Gothic ProN", sans-serif';
+        ctx.fillStyle = 'rgba(44, 62, 80, 0.8)';
+        ctx.fillText(type.nameAlt, targetWidth / 2, currentY);
+        currentY += 55;
+        
+        // 5. 説明文（大きく）
+        ctx.font = '32px "Hiragino Kaku Gothic ProN", sans-serif';
+        ctx.fillStyle = 'rgba(44, 62, 80, 0.8)';
+        const descriptionLines = wrapText(ctx, type.description, contentWidth - 40);
+        descriptionLines.forEach(line => {
+          ctx.fillText(line, targetWidth / 2, currentY);
+          currentY += 45;
+        });
+        currentY += 35;
+        
+        // 6. レーダーチャートを正方形で再描画して取得
+        if (radarChart) {
+          try {
+            // 一時的な正方形canvasを作成してチャートを再描画
+            const tempSize = 600;
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = tempSize;
+            tempCanvas.height = tempSize;
+            const tempCtx = tempCanvas.getContext('2d');
+            
+            // 背景色
+            tempCtx.fillStyle = '#fef9f3';
+            tempCtx.fillRect(0, 0, tempSize, tempSize);
+            
+            // 新しいChart.jsインスタンスを一時canvasに作成
+            const tempChart = new Chart(tempCtx, {
+              type: 'radar',
+              data: {
+                labels: RADAR_LABELS.map(l => l.label),
+                datasets: [{
+                  label: type.name,
+                  data: type.radarScores,
+                  backgroundColor: 'rgba(255, 107, 53, 0.25)',
+                  borderColor: '#FF6B35',
+                  borderWidth: 3,
+                  pointBackgroundColor: '#FF6B35',
+                  pointBorderColor: '#ffffff',
+                  pointBorderWidth: 2,
+                  pointRadius: 6
+                }]
+              },
+              options: {
+                responsive: false,
+                maintainAspectRatio: true,
+                animation: false,
+                scales: {
+                  r: {
+                    beginAtZero: true,
+                    min: 0,
+                    max: 5,
+                    ticks: {
+                      stepSize: 1,
+                      display: true,
+                      backdropColor: 'transparent',
+                      color: '#5a6c7d',
+                      font: { size: 14 }
+                    },
+                    pointLabels: {
+                      font: { size: 16, weight: '600' },
+                      color: '#2c3e50'
+                    },
+                    grid: { color: 'rgba(44, 62, 80, 0.25)', lineWidth: 1.5 },
+                    angleLines: { color: 'rgba(44, 62, 80, 0.25)', lineWidth: 1.5 }
+                  }
+                },
+                plugins: { legend: { display: false } }
+              }
+            });
+            
+            // チャートの描画完了を待つ
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            // 正方形canvasから画像を取得
+            const chartDataUrl = tempCanvas.toDataURL('image/png');
+            const chartImg = new Image();
+            await new Promise((resolve, reject) => {
+              chartImg.onload = resolve;
+              chartImg.onerror = reject;
+              chartImg.src = chartDataUrl;
+            });
+            
+            // 一時チャートを破棄
+            tempChart.destroy();
+            
+            // チャートを大きく正方形で描画
+            const chartSize = Math.min(contentWidth, 580);
+            const chartX = (targetWidth - chartSize) / 2;
+            const chartY = currentY;
+            
+            ctx.drawImage(chartImg, chartX, chartY, chartSize, chartSize);
+            currentY += chartSize + 45;
+          } catch (chartError) {
+            console.warn('チャート画像の取得に失敗:', chartError);
+            // エラー時はチャートなしで続行
+          }
+        }
+        
+        // 7. 詳細情報をテキストで描画（大きく、重ならないように間隔を調整）
+        ctx.font = 'bold 28px "Hiragino Kaku Gothic ProN", sans-serif';
+        ctx.fillStyle = '#FF6B35';
+        ctx.textAlign = 'left';
+        
+        // チャートパターン
+        ctx.fillText('チャートパターン', padding + 20, currentY);
+        currentY += 42;
+        ctx.font = '30px "Hiragino Kaku Gothic ProN", sans-serif';
+        ctx.fillStyle = 'rgba(44, 62, 80, 0.9)';
+        ctx.fillText(type.chartShape, padding + 20, currentY);
+        currentY += 60;
+        
+        // 最適な企業規模
+        ctx.font = 'bold 28px "Hiragino Kaku Gothic ProN", sans-serif';
+        ctx.fillStyle = '#FF6B35';
+        ctx.fillText('最適な企業規模', padding + 20, currentY);
+        currentY += 42;
+        ctx.font = '30px "Hiragino Kaku Gothic ProN", sans-serif';
+        ctx.fillStyle = 'rgba(44, 62, 80, 0.9)';
+        ctx.fillText(type.companySize, padding + 20, currentY);
+        currentY += 60;
+        
+        // キーワード
+        if (type.keywords && type.keywords.length > 0) {
+          ctx.font = 'bold 28px "Hiragino Kaku Gothic ProN", sans-serif';
+          ctx.fillStyle = '#FF6B35';
+          ctx.fillText('キーワード', padding + 20, currentY);
+          currentY += 45;
+          
+          ctx.font = '26px "Hiragino Kaku Gothic ProN", sans-serif';
+          ctx.fillStyle = 'rgba(44, 62, 80, 0.9)';
+          let keywordX = padding + 20;
+          let keywordY = currentY;
+          const keywordSpacing = 22;
+          const maxWidth = contentWidth - 40;
+          const lineHeight = 42;
+          
+          type.keywords.forEach((keyword, index) => {
+            const textWidth = ctx.measureText(keyword).width;
+            // 次のキーワードが収まるかチェック
+            if (keywordX + textWidth + keywordSpacing > padding + maxWidth && keywordX > padding + 20) {
+              keywordX = padding + 20;
+              keywordY += lineHeight;
+            }
+            ctx.fillText(keyword, keywordX, keywordY);
+            keywordX += textWidth + keywordSpacing;
+          });
+          currentY = keywordY + 60;
+        }
+        
+        // 8. フッター（診断完了日時）
+        const completedDate = storage.getCompletedAt();
+        if (completedDate && currentY < targetHeight - 100) {
+          ctx.fillStyle = 'rgba(44, 62, 80, 0.5)';
+          ctx.font = '22px "Hiragino Kaku Gothic ProN", sans-serif';
+          ctx.textAlign = 'center';
+          const dateText = `診断完了: ${formatDate(completedDate)}`;
+          ctx.fillText(dateText, targetWidth / 2, targetHeight - padding);
+        }
+
+        // 画像としてダウンロード
+        mainCanvas.toBlob((blob) => {
+          if (!blob) {
+            throw new Error('画像の生成に失敗しました');
+          }
+          
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          const fileName = `キャリアタイプ診断結果_${type.nameAlt}_${new Date().toISOString().split('T')[0]}.png`;
+          link.download = fileName;
+          link.href = url;
+          link.click();
+          URL.revokeObjectURL(url);
+
+          // ボタンを元に戻す
+          saveImageBtn.disabled = false;
+          saveImageBtn.textContent = '📷 画像として保存';
+        }, 'image/png', 0.95);
+
+      } catch (error) {
+        console.error('画像保存エラー:', error);
+        alert('画像の保存に失敗しました: ' + error.message);
+        
+        // ボタンを元に戻す
+        saveImageBtn.disabled = false;
+        saveImageBtn.textContent = '📷 画像として保存';
+      }
+    }
+
+    // テキストを折り返すヘルパー関数
+    function wrapText(ctx, text, maxWidth) {
+      const words = text.split('');
+      const lines = [];
+      let currentLine = '';
+      
+      for (let i = 0; i < words.length; i++) {
+        const testLine = currentLine + words[i];
+        const metrics = ctx.measureText(testLine);
+        const testWidth = metrics.width;
+        
+        if (testWidth > maxWidth && currentLine !== '') {
+          lines.push(currentLine);
+          currentLine = words[i];
+        } else {
+          currentLine = testLine;
+        }
+      }
+      lines.push(currentLine);
+      return lines;
+    }
+
     // Event Listeners
     retryBtn.addEventListener('click', handleRetry);
+    saveImageBtn.addEventListener('click', saveResultAsImage);
 
     // Initialize on page load
     if (document.readyState === 'loading') {
